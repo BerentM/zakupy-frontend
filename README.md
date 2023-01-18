@@ -1,1 +1,1 @@
-# zakupy-frontend
+# zakupy frontend
