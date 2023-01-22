@@ -1,0 +1,7 @@
+{
+    "language": "English",
+    "@language": {
+        "description": "Current language"
+    },
+    "shopping_list": "shopping list"
+}
