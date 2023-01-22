@@ -9,8 +9,9 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Home"),
+          const Text("Home"),
           Center(
             child: ElevatedButton(
               onPressed: (() => Navigator.pushNamed(context, SHOPPING_LIST)),
@@ -18,7 +19,6 @@ class Home extends StatelessWidget {
             ),
           )
         ],
-        mainAxisAlignment: MainAxisAlignment.center,
       ),
     );
   }

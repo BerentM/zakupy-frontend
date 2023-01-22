@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
 class ApiService {
@@ -7,10 +8,14 @@ class ApiService {
   Future<List<dynamic>> fetchShoppingList() async {
     try {
       final response = await get(Uri.parse("$baseUrl/shopping_list"));
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       return jsonDecode(response.body) as List;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return [];
     }
   }

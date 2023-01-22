@@ -11,7 +11,7 @@ class ShoppingList extends StatelessWidget {
         title: Text(AppLocalizations.of(context)!.shopping_list),
       ),
       body: Center(
-        child: Text("Shopping List"),
+        child: Text(AppLocalizations.of(context)!.shopping_list),
       ),
     );
   }

@@ -12,17 +12,11 @@ class AppRouter {
   Route generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case HOME:
-        return MaterialPageRoute(builder: (_) => Home());
+        return MaterialPageRoute(builder: (_) => const Home());
       case SHOPPING_LIST:
         return MaterialPageRoute(builder: (_) => const ShoppingList());
       default:
-        return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            appBar: AppBar(
-              title: Text("dupa"),
-            ),
-          ),
-        );
+        return MaterialPageRoute(builder: (_) => const Scaffold());
     }
   }
 }
