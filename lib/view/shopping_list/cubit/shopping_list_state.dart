@@ -8,5 +8,9 @@ abstract class ShoppingListState extends Equatable {
 }
 
 class ShoppingListInitial extends ShoppingListState {}
-class ShoppingListFirst extends ShoppingListState {}
-class ShoppingListSecond extends ShoppingListState {}
+
+class ShoppingListLoaded extends ShoppingListState {
+  final ShoppingListElement currentData;
+
+  ShoppingListLoaded(this.currentData);
+}

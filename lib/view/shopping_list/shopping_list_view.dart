@@ -15,21 +15,24 @@ class ShoppingListView extends StatelessWidget {
         ),
         body: BlocBuilder<ShoppingListCubit, ShoppingListState>(
           builder: (context, state) {
-            var display = "first";
-            if (state is ShoppingListFirst) {
-              display = "second";
+            if (state is ShoppingListInitial) {
+              context.read<ShoppingListCubit>().loadData();
+              return const CircularProgressIndicator();
             }
-            return Column(
-              children: [
-                Text("Current state $state"),
-                ElevatedButton(
-                  onPressed: (() => state is ShoppingListFirst
-                      ? context.read<ShoppingListCubit>().second()
-                      : context.read<ShoppingListCubit>().first()),
-                  child: Text(display),
-                ),
-              ],
-            );
+            if (state is ShoppingListLoaded) {
+              return Column(
+                children: [
+                  Text("Current state $state"),
+                  Text("Current data: ${state.currentData.value}"),
+                  ElevatedButton(
+                    onPressed: () =>
+                        context.read<ShoppingListCubit>().reloadData(),
+                    child: const Text("Reload"),
+                  ),
+                ],
+              );
+            }
+            return const Scaffold();
           },
         ));
   }
