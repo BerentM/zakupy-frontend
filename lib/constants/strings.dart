@@ -4,3 +4,5 @@ const SHOPPING_LIST = "/shopping_list";
 const ADD_SHOPPING_LIST = "/add_shopping_list";
 const EDIT_SHOPPING_LIST = "/edit_shopping_list";
 const HOME = "/";
+
+const BASE_API_URL = "http://10.0.2.2:3000";

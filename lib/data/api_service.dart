@@ -1,22 +1,17 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
+import 'package:zakupy_frontend/constants/strings.dart';
+import 'package:zakupy_frontend/data/models/shopping_list.dart';
 
 class ApiService {
-  final baseUrl = "http://10.0.2.2:3000";
-  Future<List<dynamic>> fetchShoppingList() async {
+  Future<ShoppingList> fetchShoppingList() async {
     try {
-      final response = await get(Uri.parse("$baseUrl/shopping_list"));
-      if (kDebugMode) {
-        print(response.body);
-      }
-      return jsonDecode(response.body) as List;
+      final response = await get(Uri.parse("$BASE_API_URL/shopping_list"));
+      print(response.body);
+      return shoppingListFromJson(response.body);
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-      return [];
+      print(e);
+      return shoppingListFromJson("");
     }
   }
 }
