@@ -10,7 +10,7 @@ abstract class ShoppingListState extends Equatable {
 class ShoppingListInitial extends ShoppingListState {}
 
 class ShoppingListLoaded extends ShoppingListState {
-  final ShoppingListElement currentData;
+  final ShoppingList currentData;
 
-  ShoppingListLoaded(this.currentData);
+  const ShoppingListLoaded(this.currentData);
 }

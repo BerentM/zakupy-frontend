@@ -10,7 +10,7 @@ class ShoppingListCubit extends Cubit<ShoppingListState> {
 
   void loadData() async {
     var l = await ApiService().fetchShoppingList();
-    emit(ShoppingListLoaded(l.shoppingList[0]));
+    emit(ShoppingListLoaded(l));
   }
 
   void reloadData() async {

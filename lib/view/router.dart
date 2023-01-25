@@ -11,6 +11,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const Home());
       case SHOPPING_LIST:
         return MaterialPageRoute(builder: (_) => const ShoppingList());
+      case EDIT_SHOPPING_LIST:
+        return MaterialPageRoute(builder: (_) => const Scaffold()); 
       default:
         return MaterialPageRoute(builder: (_) => const Scaffold());
     }
