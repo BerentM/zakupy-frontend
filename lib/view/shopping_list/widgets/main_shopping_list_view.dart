@@ -36,7 +36,15 @@ class _MainShoppingListViewState extends State<MainShoppingListView> {
                     shoppingList[index].position = lastPos;
                     shoppingList[index].selected = true;
                   }),
-            onLongPress: () => Navigator.pushNamed(context, EDIT_SHOPPING_LIST),
+            onLongPress: () => Navigator.pushNamed(
+              context,
+              EDIT_SHOPPING_LIST,
+              arguments: {
+                "product": shoppingList[index].value,
+                "shop": shoppingList[index].market,
+                "count": shoppingList[index].count,
+              },
+            ),
             leading: SizedBox(
               height: double.infinity, // center icon
               child: Icon(
