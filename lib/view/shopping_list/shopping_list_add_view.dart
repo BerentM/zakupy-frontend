@@ -21,8 +21,8 @@ class ShoppingListAddView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
-                // TODO:
-                onPressed: () => print("TODO: add new product!"),
+                // TODO: implement
+                onPressed: () => {},
                 child: Text(AppLocalizations.of(context)!.save),
               ),
             ),

@@ -17,7 +17,7 @@ class ShoppingListView extends StatelessWidget {
           actions: [
             IconButton(
               //TODO: implement
-              onPressed: () => print("TODO: save changes"),
+              onPressed: () => {},
               icon: const Icon(Icons.save),
             ),
             IconButton(

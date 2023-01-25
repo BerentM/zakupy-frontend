@@ -11,7 +11,7 @@ class ShoppingList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ShoppingListCubit(),
-      child: ShoppingListView(),
+      child: const ShoppingListView(),
     );
   }
 }
