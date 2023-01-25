@@ -29,7 +29,6 @@ class ShoppingList {
   int length() {
     return shoppingList.length;
   }
-
 }
 
 class ShoppingListElement {
@@ -44,7 +43,7 @@ class ShoppingListElement {
   int count;
   String value;
   String market;
-  bool checked = false;
+  bool selected = false;
   int position = 1;
 
   factory ShoppingListElement.fromJson(Map<String, dynamic> json) =>
