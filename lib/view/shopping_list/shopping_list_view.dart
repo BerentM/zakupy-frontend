@@ -51,38 +51,39 @@ class DisplayView extends StatefulWidget {
 }
 
 class _DisplayViewState extends State<DisplayView> {
-  // late List<bool> checked = [
-  //   for (var n = 0; n < widget.currentData.length(); n++)
-  //     widget.currentData.shoppingList[n].checked
-  // ];
+  late List<ShoppingListElement> shoppingList = widget.currentData.shoppingList;
+  int lastPos = 1;
   @override
   Widget build(BuildContext context) {
+    shoppingList.sort(
+      (a, b) => a.position.compareTo(b.position),
+    );
     return ListView.builder(
         itemCount: widget.currentData.length(),
         itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 4.0),
-            child: ListTile(
-              onTap: () => widget.currentData.shoppingList[index].checked
-                  ? setState(() =>
-                      widget.currentData.shoppingList[index].checked = false)
-                  : setState(() =>
-                      widget.currentData.shoppingList[index].checked = true),
-              onLongPress: () =>
-                  Navigator.pushNamed(context, EDIT_SHOPPING_LIST),
-              leading: SizedBox(
-                height: double.infinity, // center icon
-                child: Icon(
-                  Icons.shopping_cart,
-                  color: widget.currentData.shoppingList[index].checked
-                      ? Colors.green
-                      : Colors.grey,
-                ),
+          return ListTile(
+            selected: shoppingList[index].checked,
+            onTap: () => shoppingList[index].checked
+                ? setState(() {
+                    shoppingList[index].position = 1;
+                    shoppingList[index].checked = false;
+                  })
+                : setState(() {
+                    lastPos += 1;
+                    shoppingList[index].position = lastPos;
+                    shoppingList[index].checked = true;
+                  }),
+            onLongPress: () => Navigator.pushNamed(context, EDIT_SHOPPING_LIST),
+            leading: SizedBox(
+              height: double.infinity, // center icon
+              child: Icon(
+                Icons.shopping_cart,
+                color: shoppingList[index].checked ? Colors.green : Colors.grey,
               ),
-              title: Text(widget.currentData.shoppingList[index].value),
-              trailing: Text("${widget.currentData.shoppingList[index].count}"),
-              subtitle: Text(widget.currentData.shoppingList[index].market),
             ),
+            title: Text(shoppingList[index].value),
+            trailing: Text(shoppingList[index].count.toString()),
+            subtitle: Text(shoppingList[index].market),
           );
         });
   }
