@@ -3,7 +3,7 @@ import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/models/shopping_list.dart';
 
 class MainShoppingListView extends StatefulWidget {
-  final ShoppingList currentData;
+  final ShoppingListModel currentData;
   const MainShoppingListView({
     Key? key,
     required this.currentData,

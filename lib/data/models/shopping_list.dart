@@ -4,19 +4,20 @@
 
 import 'dart:convert';
 
-ShoppingList shoppingListFromJson(String str) =>
-    ShoppingList.fromJson(json.decode(str));
+ShoppingListModel shoppingListFromJson(String str) =>
+    ShoppingListModel.fromJson(json.decode(str));
 
-String shoppingListToJson(ShoppingList data) => json.encode(data.toJson());
+String shoppingListToJson(ShoppingListModel data) => json.encode(data.toJson());
 
-class ShoppingList {
-  ShoppingList({
+class ShoppingListModel {
+  ShoppingListModel({
     required this.shoppingList,
   });
 
   List<ShoppingListElement> shoppingList;
 
-  factory ShoppingList.fromJson(Map<String, dynamic> json) => ShoppingList(
+  factory ShoppingListModel.fromJson(Map<String, dynamic> json) =>
+      ShoppingListModel(
         shoppingList: List<ShoppingListElement>.from(
             json["shopping_list"].map((x) => ShoppingListElement.fromJson(x))),
       );
