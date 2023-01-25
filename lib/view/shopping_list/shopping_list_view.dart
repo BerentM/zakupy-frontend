@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zakupy_frontend/constants/strings.dart';
 
 import 'cubit/shopping_list_cubit.dart';
 import 'widgets/main_shopping_list_view.dart';
@@ -15,11 +16,12 @@ class ShoppingListView extends StatelessWidget {
           title: Text(AppLocalizations.of(context)!.shopping_list),
           actions: [
             IconButton(
+              //TODO: implement
               onPressed: () => print("TODO: save changes"),
               icon: const Icon(Icons.save),
             ),
             IconButton(
-              onPressed: () => print("TODO: add new product!"),
+              onPressed: () => Navigator.pushNamed(context, ADD_SHOPPING_LIST),
               icon: const Icon(Icons.add),
             )
           ],
