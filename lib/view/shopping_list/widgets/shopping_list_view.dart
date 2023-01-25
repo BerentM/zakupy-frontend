@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
 
-import 'cubit/shopping_list_cubit.dart';
-import 'widgets/main_shopping_list_view.dart';
+import '../cubit/shopping_list_cubit.dart';
+import 'main_shopping_list_view.dart';
 
 class ShoppingListView extends StatelessWidget {
   const ShoppingListView({Key? key}) : super(key: key);
@@ -30,7 +30,7 @@ class ShoppingListView extends StatelessWidget {
           builder: (context, state) {
             if (state is ShoppingListInitial) {
               context.read<ShoppingListCubit>().loadData();
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             }
             if (state is ShoppingListLoaded) {
               return MainShoppingListView(

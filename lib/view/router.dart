@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zakupy_frontend/view/home/home.dart';
 import 'package:zakupy_frontend/view/shopping_list/shopping_list.dart';
-import 'package:zakupy_frontend/view/shopping_list/shopping_list_add_view.dart';
+import 'package:zakupy_frontend/view/shopping_list/widgets/shopping_list_add_view.dart';
 
 import '../constants/strings.dart';
 

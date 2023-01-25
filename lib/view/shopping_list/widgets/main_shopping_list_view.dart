@@ -28,7 +28,7 @@ class _MainShoppingListViewState extends State<MainShoppingListView> {
             selected: shoppingList[index].selected,
             onTap: () => shoppingList[index].selected
                 ? setState(() {
-                    shoppingList[index].position = 1;
+                    shoppingList[index].position = 0;
                     shoppingList[index].selected = false;
                   })
                 : setState(() {
