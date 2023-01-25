@@ -3,5 +3,11 @@
     "@language": {
         "description": "Current language"
     },
-    "shopping_list": "shopping list"
+    "shopping_list": "shopping list",
+    "add_product": "add product",
+    "product": "product",
+    "shop": "shop",
+    "count": "count",
+    "save": "save",
+    "cancel": "cancel"
 }

@@ -4,7 +4,7 @@ import 'package:zakupy_frontend/data/models/shopping_list.dart';
 
 class ApiService {
   // Future<ShoppingList> fetchShoppingList() async {
-  Future<ShoppingList> fetchShoppingList() async {
+  Future<ShoppingListModel> fetchShoppingList() async {
     final request = http.Request(
       'GET',
       Uri.parse('$BASE_API_URL/shopping_list'),

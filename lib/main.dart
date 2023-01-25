@@ -38,7 +38,7 @@ class App extends StatelessWidget {
             create: (context) => ApiService(),
           ),
         ],
-        child: Home(),
+        child: const Home(),
       ),
     );
   }

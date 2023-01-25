@@ -1,4 +1,10 @@
 {
     "language": "Polski",
-    "shopping_list": "lista zakupów"
+    "shopping_list": "lista zakupów",
+    "add_product": "dodaj produkt",
+    "product": "produkt",
+    "shop": "sklep",
+    "count": "ilość",
+    "save": "zapisz",
+    "cancel": "anuluj"
 }
