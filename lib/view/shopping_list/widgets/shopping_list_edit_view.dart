@@ -2,25 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:zakupy_frontend/data/models/shopping_list.dart';
+
 class ShoppingListEditView extends StatelessWidget {
-  const ShoppingListEditView({Key? key}) : super(key: key);
+  final ShoppingListElement productData;
+  const ShoppingListEditView({
+    Key? key,
+    required this.productData,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // final productData = ModalRoute.of(context)!.settings.arguments as Map;
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.edit_product),
       ),
       body: Column(
         children: [
-          StringInputField(
-              context: context, label: AppLocalizations.of(context)!.product),
-          StringInputField(
-              context: context, label: AppLocalizations.of(context)!.shop),
+          StringInputField(context: context, label: productData.value),
+          StringInputField(context: context, label: productData.market),
           Row(children: [
             NumberInputField(
-                context: context, label: AppLocalizations.of(context)!.count),
+                context: context, label: productData.count.toString()),
             const Spacer(flex: 4),
             Padding(
               padding: const EdgeInsets.all(8.0),
