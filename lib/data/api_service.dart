@@ -21,6 +21,20 @@ class ApiService {
     }
   }
 
+  Future<ProductList> fetchProductList() async {
+    final request = http.Request(
+      'GET',
+      Uri.parse('$BASE_API_URL/productList/all'),
+    );
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      return productListFromJson(await response.stream.bytesToString());
+    } else {
+      logger.i("empty productList/all response", component);
+      return productListFromJson("");
+    }
+  }
+
   Future<void> fillUp(List<int> ids) async {
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(

@@ -1,6 +1,7 @@
 {
     "language": "Polski",
     "shopping_list": "lista zakupów",
+    "product_list": "lista produktów",
     "add_product": "dodaj produkt",
     "edit_product": "edycja produktu",
     "product": "produkt",

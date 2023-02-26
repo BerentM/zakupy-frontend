@@ -12,10 +12,14 @@ class Home extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text("Home"),
+          ElevatedButton(
+            onPressed: (() => Navigator.pushNamed(context, SHOPPING_LIST)),
+            child: Text(AppLocalizations.of(context)!.shopping_list),
+          ),
           Center(
             child: ElevatedButton(
-              onPressed: (() => Navigator.pushNamed(context, SHOPPING_LIST)),
-              child: Text(AppLocalizations.of(context)!.shopping_list),
+              onPressed: (() => Navigator.pushNamed(context, PRODUCT_LIST)),
+              child: Text(AppLocalizations.of(context)!.product_list),
             ),
           )
         ],
