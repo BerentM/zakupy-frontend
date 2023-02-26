@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:zakupy_frontend/utils/logs.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
 
 class ApiService {
-  // Future<ShoppingList> fetchShoppingList() async {
+  final component = "ApiService";
   Future<ProductList> fetchShoppingList() async {
     final request = http.Request(
       'GET',
@@ -15,6 +16,7 @@ class ApiService {
     if (response.statusCode == 200) {
       return productListFromJson(await response.stream.bytesToString());
     } else {
+      logger.i("empty shoppingList/all response", component);
       return productListFromJson("");
     }
   }
@@ -25,16 +27,16 @@ class ApiService {
       'PATCH',
       Uri.parse('$BASE_API_URL/shoppingList/fill_up'),
     );
-    print("ids inside fillUp: $ids");
+    logger.i("ids inside fillUp: $ids", component);
     request.body = json.encode(ids);
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+      logger.i(await response.stream.bytesToString(), component);
     } else {
-      print(response.reasonPhrase);
+      logger.e(response.reasonPhrase, component);
     }
   }
 }
