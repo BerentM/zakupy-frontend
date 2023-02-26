@@ -12,33 +12,41 @@ class ShoppingListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.shopping_list),
-          actions: [
-            IconButton(
-              //TODO: implement
-              onPressed: () => {},
-              icon: const Icon(Icons.save),
-            ),
-            IconButton(
-              onPressed: () => Navigator.pushNamed(context, ADD_PRODUCT_LIST),
-              icon: const Icon(Icons.add),
-            )
-          ],
-        ),
-        body: BlocBuilder<ShoppingListCubit, ShoppingListState>(
-          builder: (context, state) {
-            if (state is ShoppingListInitial) {
-              context.read<ShoppingListCubit>().loadData();
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is ShoppingListLoaded) {
-              return MainShoppingListView(
-                currentData: state.currentData,
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.shopping_list),
+        actions: [
+          BlocBuilder<ShoppingListCubit, ShoppingListState>(
+            builder: (context, state) {
+              return IconButton(
+                onPressed: () {
+                  if (state is ShoppingListLoaded) {
+                    context.read<ShoppingListCubit>().fillUp(state.currentData);
+                  }
+                },
+                icon: const Icon(Icons.save),
               );
-            }
-            return const Scaffold();
-          },
-        ));
+            },
+          ),
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, ADD_PRODUCT),
+            icon: const Icon(Icons.add),
+          )
+        ],
+      ),
+      body: BlocBuilder<ShoppingListCubit, ShoppingListState>(
+        builder: (context, state) {
+          if (state is ShoppingListInitial) {
+            context.read<ShoppingListCubit>().loadData();
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is ShoppingListLoaded) {
+            return MainShoppingListView(
+              currentData: state.currentData,
+            );
+          }
+          return const Scaffold();
+        },
+      ),
+    );
   }
 }

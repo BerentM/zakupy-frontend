@@ -13,6 +13,20 @@ class ShoppingListCubit extends Cubit<ShoppingListState> {
     emit(ShoppingListLoaded(l));
   }
 
+  void fillUp(ProductList products) async {
+    List<int> ids = [];
+    for (var product in products.productList) {
+      if (product.selected) {
+        ids.add(product.id);
+      }
+    }
+
+    if (ids.isNotEmpty) {
+      await ApiService().fillUp(ids);
+      emit(ShoppingListInitial());
+    }
+  }
+
   void reloadData() async {
     emit(ShoppingListInitial());
   }

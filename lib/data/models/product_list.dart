@@ -32,6 +32,7 @@ class ProductList {
 
 class ProductListElement {
   ProductListElement({
+    required this.id,
     required this.product,
     required this.source,
     required this.category,
@@ -40,6 +41,7 @@ class ProductListElement {
     required this.missingAmount,
   });
 
+  int id;
   String product;
   String source;
   String category;
@@ -51,6 +53,7 @@ class ProductListElement {
 
   factory ProductListElement.fromJson(Map<String, dynamic> json) =>
       ProductListElement(
+        id: json["id"],
         product: json["product"],
         source: json["source"],
         category: json["category"],
@@ -65,6 +68,5 @@ class ProductListElement {
         "category": category,
         "target_amount": targetAmount,
         "current_amount": currentAmount,
-        "missing_amount": missingAmount,
       };
 }

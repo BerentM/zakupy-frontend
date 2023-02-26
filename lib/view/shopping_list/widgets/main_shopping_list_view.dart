@@ -22,34 +22,34 @@ class _MainShoppingListViewState extends State<MainShoppingListView> {
       (a, b) => a.position.compareTo(b.position),
     );
     return ListView.builder(
-        itemCount: widget.currentData.count,
-        itemBuilder: (context, index) {
-          return ListTile(
-            selected: shoppingList[index].selected,
-            onTap: () => shoppingList[index].selected
-                ? setState(() {
-                    shoppingList[index].position = 0;
-                    shoppingList[index].selected = false;
-                  })
-                : setState(() {
-                    lastPos += 1;
-                    shoppingList[index].position = lastPos;
-                    shoppingList[index].selected = true;
-                  }),
-            onLongPress: () => Navigator.pushNamed(context, EDIT_PRODUCT_LIST,
-                arguments: shoppingList[index]),
-            leading: SizedBox(
-              height: double.infinity, // center icon
-              child: Icon(
-                Icons.shopping_cart,
-                color:
-                    shoppingList[index].selected ? Colors.green : Colors.grey,
-              ),
+      itemCount: widget.currentData.count,
+      itemBuilder: (context, index) {
+        return ListTile(
+          selected: shoppingList[index].selected,
+          onTap: () => shoppingList[index].selected
+              ? setState(() {
+                  shoppingList[index].position = 0;
+                  shoppingList[index].selected = false;
+                })
+              : setState(() {
+                  lastPos += 1;
+                  shoppingList[index].position = lastPos;
+                  shoppingList[index].selected = true;
+                }),
+          onLongPress: () => Navigator.pushNamed(context, EDIT_PRODUCT,
+              arguments: shoppingList[index]),
+          leading: SizedBox(
+            height: double.infinity, // center icon
+            child: Icon(
+              Icons.shopping_cart,
+              color: shoppingList[index].selected ? Colors.green : Colors.grey,
             ),
-            title: Text(shoppingList[index].product),
-            trailing: Text(shoppingList[index].missingAmount.toString()),
-            subtitle: Text(shoppingList[index].source),
-          );
-        });
+          ),
+          title: Text(shoppingList[index].product),
+          trailing: Text(shoppingList[index].missingAmount.toString()),
+          subtitle: Text(shoppingList[index].source),
+        );
+      },
+    );
   }
 }
