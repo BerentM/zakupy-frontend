@@ -21,6 +21,12 @@ class Home extends StatelessWidget {
               onPressed: (() => Navigator.pushNamed(context, PRODUCT_LIST)),
               child: Text(AppLocalizations.of(context)!.product_list),
             ),
+          ),
+          Center(
+            child: ElevatedButton(
+              onPressed: (() => Navigator.pushNamed(context, LOGIN)),
+              child: Text(AppLocalizations.of(context)!.login),
+            ),
           )
         ],
       ),

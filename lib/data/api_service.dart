@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:zakupy_frontend/data/models/auth.dart';
 import 'package:zakupy_frontend/utils/logs.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
@@ -36,14 +37,12 @@ class ApiService {
   }
 
   Future<void> fillUp(List<int> ids) async {
-    var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
       'PATCH',
       Uri.parse('$BASE_API_URL/shoppingList/fill_up'),
     );
     logger.i("ids inside fillUp: $ids", component);
     request.body = json.encode(ids);
-    request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
 
@@ -51,6 +50,23 @@ class ApiService {
       logger.i(await response.stream.bytesToString(), component);
     } else {
       logger.e(response.reasonPhrase, component);
+    }
+  }
+
+  Future<JwtLogin> login(String username, password) async {
+    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+    var request =
+        http.Request('POST', Uri.parse('$BASE_API_URL/auth/jwt/login'));
+    request.bodyFields = {'username': username, 'password': password};
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      return jwtLoginFromJson(await response.stream.bytesToString());
+    } else {
+      logger.e(response.reasonPhrase, component);
+      throw Exception(response.reasonPhrase);
     }
   }
 }

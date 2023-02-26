@@ -11,5 +11,11 @@
     "shop": "shop",
     "count": "count",
     "save": "save",
-    "cancel": "cancel"
+    "cancel": "cancel",
+    "login": "login",
+    "username": "user name",
+    "password": "password",
+    "forgot_password": "forgot password",
+    "sign_in": "sign in",
+    "no_account": "don't have account?"
 }

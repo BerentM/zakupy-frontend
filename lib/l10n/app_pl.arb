@@ -8,5 +8,11 @@
     "shop": "sklep",
     "count": "ilość",
     "save": "zapisz",
-    "cancel": "anuluj"
+    "cancel": "anuluj",
+    "login": "zaloguj się",
+    "username": "nazwa użytkownika",
+    "password": "hasło",
+    "forgot_password": "przypomnij hasło",
+    "sign_in": "utwórz konto",
+    "no_account": "nie masz konta?"
 }
