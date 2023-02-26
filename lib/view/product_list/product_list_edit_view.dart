@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:zakupy_frontend/data/models/shopping_list.dart';
+import 'package:zakupy_frontend/data/models/product_list.dart';
 
 class ShoppingListEditView extends StatelessWidget {
-  final ShoppingListElement productData;
+  final ProductListElement productData;
   const ShoppingListEditView({
     Key? key,
     required this.productData,
@@ -19,11 +19,11 @@ class ShoppingListEditView extends StatelessWidget {
       ),
       body: Column(
         children: [
-          StringInputField(context: context, label: productData.value),
-          StringInputField(context: context, label: productData.market),
+          StringInputField(context: context, label: productData.product),
+          StringInputField(context: context, label: productData.source),
           Row(children: [
-            NumberInputField(
-                context: context, label: productData.count.toString()),
+            // NumberInputField(
+            //     context: context, label: productData.currentAmount.toString()),
             const Spacer(flex: 4),
             Padding(
               padding: const EdgeInsets.all(8.0),

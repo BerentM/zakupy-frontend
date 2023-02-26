@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zakupy_frontend/data/api_service.dart';
-import 'package:zakupy_frontend/data/models/shopping_list.dart';
+import 'package:zakupy_frontend/data/models/product_list.dart';
 
 part 'shopping_list_state.dart';
 

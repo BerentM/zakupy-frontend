@@ -21,7 +21,7 @@ class ShoppingListView extends StatelessWidget {
               icon: const Icon(Icons.save),
             ),
             IconButton(
-              onPressed: () => Navigator.pushNamed(context, ADD_SHOPPING_LIST),
+              onPressed: () => Navigator.pushNamed(context, ADD_PRODUCT_LIST),
               icon: const Icon(Icons.add),
             )
           ],
