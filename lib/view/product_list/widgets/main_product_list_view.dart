@@ -35,10 +35,10 @@ class _MainProductListViewState extends State<MainProductListView> {
               color: Colors.grey,
             ),
           ),
-          title: Text(productList[index].product),
+          title: Text(productList[index].product!),
           trailing: Text(
               "${productList[index].currentAmount.toString()}/${productList[index].targetAmount.toString()}"),
-          subtitle: Text(productList[index].source),
+          subtitle: Text(productList[index].source!),
         );
       },
     );

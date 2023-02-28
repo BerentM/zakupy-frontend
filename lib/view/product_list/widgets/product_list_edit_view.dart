@@ -19,8 +19,8 @@ class ProductListEditView extends StatelessWidget {
       ),
       body: Column(
         children: [
-          StringInputField(context: context, label: productData.product),
-          StringInputField(context: context, label: productData.source),
+          StringInputField(context: context, label: productData.product!),
+          StringInputField(context: context, label: productData.source!),
           Row(children: [
             // NumberInputField(
             //     context: context, label: productData.currentAmount.toString()),

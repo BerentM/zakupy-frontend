@@ -7,7 +7,13 @@ import 'dart:convert';
 ProductList productListFromJson(String str) =>
     ProductList.fromJson(json.decode(str));
 
+ProductListElement productListElementFromJson(String str) =>
+    ProductListElement.fromJson(json.decode(str));
+
 String productListToJson(ProductList data) => json.encode(data.toJson());
+
+String productListElementToJson(ProductListElement data) =>
+    json.encode(data.toJson());
 
 class ProductList {
   ProductList({
@@ -32,22 +38,22 @@ class ProductList {
 
 class ProductListElement {
   ProductListElement({
-    required this.id,
-    required this.product,
-    required this.source,
-    required this.category,
-    required this.targetAmount,
-    required this.currentAmount,
-    required this.missingAmount,
+    this.id,
+    this.product,
+    this.source,
+    this.category,
+    this.targetAmount,
+    this.currentAmount,
+    this.missingAmount,
   });
 
-  int id;
-  String product;
-  String source;
-  String category;
-  int targetAmount;
-  int currentAmount;
-  int missingAmount;
+  int? id;
+  String? product;
+  String? source;
+  String? category;
+  int? targetAmount;
+  int? currentAmount;
+  int? missingAmount;
   bool selected = false;
   int position = 1;
 

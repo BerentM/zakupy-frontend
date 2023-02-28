@@ -18,7 +18,7 @@ class AppRouter {
       case PRODUCT_LIST:
         return MaterialPageRoute(builder: (_) => const ProductList());
       case ADD_PRODUCT:
-        return MaterialPageRoute(builder: (_) => const ProductListAddView());
+        return MaterialPageRoute(builder: (_) => ProductListAddView());
       case LOGIN:
         return MaterialPageRoute(builder: (_) => const Login());
       case EDIT_PRODUCT:

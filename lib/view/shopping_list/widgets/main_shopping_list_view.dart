@@ -45,9 +45,9 @@ class _MainShoppingListViewState extends State<MainShoppingListView> {
               color: shoppingList[index].selected ? Colors.green : Colors.grey,
             ),
           ),
-          title: Text(shoppingList[index].product),
+          title: Text(shoppingList[index].product!),
           trailing: Text(shoppingList[index].missingAmount.toString()),
-          subtitle: Text(shoppingList[index].source),
+          subtitle: Text(shoppingList[index].source!),
         );
       },
     );

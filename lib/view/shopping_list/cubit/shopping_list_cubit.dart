@@ -21,7 +21,7 @@ class ShoppingListCubit extends Cubit<ShoppingListState> {
     List<int> ids = [];
     for (var product in products.productList) {
       if (product.selected) {
-        ids.add(product.id);
+        ids.add(product.id!);
       }
     }
 
