@@ -8,6 +8,7 @@ import 'package:zakupy_frontend/data/models/product_list.dart';
 
 class ApiService {
   final component = "ApiService";
+  final jsonHeaders = {'Content-Type': 'application/json'};
   Future<ProductList> fetchShoppingList() async {
     final request = http.Request(
       'GET',
@@ -55,8 +56,10 @@ class ApiService {
 
   Future<JwtLogin> login(String username, password) async {
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var request =
-        http.Request('POST', Uri.parse('$BASE_API_URL/auth/jwt/login'));
+    var request = http.Request(
+      'POST',
+      Uri.parse('$BASE_API_URL/auth/jwt/login'),
+    );
     request.bodyFields = {'username': username, 'password': password};
     request.headers.addAll(headers);
 
@@ -64,6 +67,43 @@ class ApiService {
 
     if (response.statusCode == 200) {
       return jwtLoginFromJson(await response.stream.bytesToString());
+    } else {
+      logger.e(response.reasonPhrase, component);
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<ProductListElement> addProduct(ProductListElement data) async {
+    var request = http.Request(
+      'POST',
+      Uri.parse('$BASE_API_URL/productList/create_item'),
+    );
+    request.body = productListElementToJson(data);
+    request.headers.addAll(jsonHeaders);
+    logger.d(request.body, component);
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      return productListElementFromJson(await response.stream.bytesToString());
+    } else {
+      logger.e(response.reasonPhrase, component);
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<ProductListElement> updateProduct(
+    int id,
+    ProductListElement data,
+  ) async {
+    var request = http.Request(
+        'PATCH', Uri.parse('$BASE_API_URL/productList/update_item?id=$id'));
+    request.body = productListElementToJson(data);
+    request.headers.addAll(jsonHeaders);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      return productListElementFromJson(await response.stream.bytesToString());
     } else {
       logger.e(response.reasonPhrase, component);
       throw Exception(response.reasonPhrase);
