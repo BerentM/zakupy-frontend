@@ -12,11 +12,11 @@ class ProductListAddView extends StatefulWidget {
 }
 
 class _ProductListAddViewState extends State<ProductListAddView> {
-  final TextEditingController categoryController = TextEditingController();
-  final TextEditingController productController = TextEditingController();
-  final TextEditingController shopController = TextEditingController();
-  final TextEditingController currentAmountController = TextEditingController();
-  final TextEditingController targetAmountController = TextEditingController();
+  final categoryController = TextEditingController(),
+      productController = TextEditingController(),
+      shopController = TextEditingController(),
+      currentAmountController = TextEditingController(),
+      targetAmountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +35,9 @@ class _ProductListAddViewState extends State<ProductListAddView> {
             label: AppLocalizations.of(context)!.product,
           ),
           _TextInput(
-              textController: shopController,
-              label: AppLocalizations.of(context)!.shop),
+            textController: shopController,
+            label: AppLocalizations.of(context)!.shop,
+          ),
           Row(children: [
             _NumberInput(
               textController: currentAmountController,
@@ -46,38 +47,65 @@ class _ProductListAddViewState extends State<ProductListAddView> {
               textController: targetAmountController,
               label: AppLocalizations.of(context)!.target_amount,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                child: Text(AppLocalizations.of(context)!.save),
-                onPressed: () => {
-                  ApiService().addProduct(
-                    ProductListElement(
-                      category: categoryController.text,
-                      product: productController.text,
-                      source: shopController.text,
-                      currentAmount: int.parse(currentAmountController.text),
-                      targetAmount: int.parse(targetAmountController.text),
-                    ),
-                  ),
-                  categoryController.clear(),
-                  productController.clear(),
-                  shopController.clear(),
-                  currentAmountController.clear(),
-                  targetAmountController.clear(),
-                  Navigator.pop(
-                    context,
-                  )
-                },
-              ),
+            SaveButton(
+              categoryController: categoryController,
+              productController: productController,
+              shopController: shopController,
+              currentAmountController: currentAmountController,
+              targetAmountController: targetAmountController,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CancelButton(context: context),
             ),
-            const Spacer(flex: 1),
           ])
         ],
+      ),
+    );
+  }
+}
+
+class SaveButton extends StatelessWidget {
+  const SaveButton({
+    Key? key,
+    required this.categoryController,
+    required this.productController,
+    required this.shopController,
+    required this.currentAmountController,
+    required this.targetAmountController,
+  }) : super(key: key);
+
+  final TextEditingController categoryController,
+      productController,
+      shopController,
+      currentAmountController,
+      targetAmountController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        child: Text(AppLocalizations.of(context)!.save),
+        onPressed: () => {
+          ApiService().addProduct(
+            ProductListElement(
+              category: categoryController.text,
+              product: productController.text,
+              source: shopController.text,
+              currentAmount: int.parse(currentAmountController.text),
+              targetAmount: int.parse(targetAmountController.text),
+            ),
+          ),
+          categoryController.clear(),
+          productController.clear(),
+          shopController.clear(),
+          currentAmountController.clear(),
+          targetAmountController.clear(),
+          Navigator.pop(
+            context,
+          )
+        },
       ),
     );
   }
