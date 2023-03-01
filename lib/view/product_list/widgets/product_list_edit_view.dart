@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/api_service.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
 import 'package:zakupy_frontend/view/common/buttons.dart';
@@ -35,7 +36,10 @@ class _ProductListEditViewState extends State<ProductListEditView> {
           IconButton(
             onPressed: () {
               ApiService().deleteProduct(productData.id!);
-              Navigator.pop(context);
+              Navigator.popAndPushNamed(
+                context,
+                PRODUCT_LIST,
+              );
             },
             icon: const Icon(Icons.delete_forever),
           )
@@ -132,9 +136,10 @@ class _SaveButton extends StatelessWidget {
           shopController.clear(),
           currentAmountController.clear(),
           targetAmountController.clear(),
-          Navigator.pop(
+          Navigator.popAndPushNamed(
             context,
-          ),
+            PRODUCT_LIST,
+          )
         },
       ),
     );
