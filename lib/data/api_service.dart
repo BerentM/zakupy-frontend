@@ -109,4 +109,20 @@ class ApiService {
       throw Exception(response.reasonPhrase);
     }
   }
+
+  void deleteProduct(int id) async {
+    var request = http.Request(
+      'DELETE',
+      Uri.parse('$BASE_API_URL/productList/delete_item?id=$id'),
+    );
+    request.headers.addAll(jsonHeaders);
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      logger.d("Product with id=$id deleted.", component);
+    } else {
+      logger.e(response.reasonPhrase, component);
+      throw Exception(response.reasonPhrase);
+    }
+  }
 }

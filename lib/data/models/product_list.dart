@@ -68,11 +68,15 @@ class ProductListElement {
         missingAmount: json["missing_amount"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "product": product,
-        "source": source,
-        "category": category,
-        "target_amount": targetAmount,
-        "current_amount": currentAmount,
-      };
+  Map<String, dynamic> toJson() {
+    final map = {
+      "product": product,
+      "source": source,
+      "category": category,
+      "target_amount": targetAmount,
+      "current_amount": currentAmount,
+    };
+    map.removeWhere((key, value) => value == null);
+    return map;
+  }
 }

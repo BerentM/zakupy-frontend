@@ -1,39 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:zakupy_frontend/data/api_service.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
+import 'package:zakupy_frontend/view/common/buttons.dart';
+import 'package:zakupy_frontend/view/product_list/cubit/product_list_cubit.dart';
+import 'package:zakupy_frontend/view/product_list/widgets/input_fields.dart';
 
-class ProductListEditView extends StatelessWidget {
+class ProductListEditView extends StatefulWidget {
   final ProductListElement productData;
+
   const ProductListEditView({
     Key? key,
     required this.productData,
   }) : super(key: key);
 
   @override
+  State<ProductListEditView> createState() => _ProductListEditViewState();
+}
+
+class _ProductListEditViewState extends State<ProductListEditView> {
+  final categoryController = TextEditingController(),
+      productController = TextEditingController(),
+      sourceController = TextEditingController(),
+      currentAmountController = TextEditingController(),
+      targetAmountController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
+    final productData = widget.productData;
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.edit_product),
+        actions: [
+          IconButton(
+            onPressed: () {
+              ApiService().deleteProduct(productData.id!);
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.delete_forever),
+          )
+        ],
       ),
-      body: Column(
+      body: ListView(
         children: [
-          StringInputField(context: context, label: productData.product!),
-          StringInputField(context: context, label: productData.source!),
+          TextInput(
+            textController: categoryController,
+            label: productData.category!,
+          ),
+          TextInput(
+            textController: productController,
+            label: productData.product!,
+          ),
+          TextInput(
+            textController: sourceController,
+            label: productData.source!,
+          ),
           Row(children: [
-            // NumberInputField(
-            //     context: context, label: productData.currentAmount.toString()),
-            const Spacer(flex: 4),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SaveButton(context: context),
+            NumberInput(
+              textController: currentAmountController,
+              label: "${productData.currentAmount!}",
+            ),
+            NumberInput(
+              textController: targetAmountController,
+              label: "${productData.targetAmount!}",
+            ),
+            _SaveButton(
+              id: productData.id!,
+              categoryController: categoryController,
+              productController: productController,
+              shopController: sourceController,
+              currentAmountController: currentAmountController,
+              targetAmountController: targetAmountController,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CancelButton(context: context),
             ),
-            const Spacer(flex: 1),
           ])
         ],
       ),
@@ -41,95 +83,60 @@ class ProductListEditView extends StatelessWidget {
   }
 }
 
-class NumberInputField extends StatelessWidget {
-  const NumberInputField({
+class _SaveButton extends StatelessWidget {
+  const _SaveButton({
     Key? key,
-    required this.context,
-    required this.label,
+    required this.id,
+    required this.categoryController,
+    required this.productController,
+    required this.shopController,
+    required this.currentAmountController,
+    required this.targetAmountController,
   }) : super(key: key);
 
-  final BuildContext context;
-  final String label;
+  final int id;
+  final TextEditingController categoryController,
+      productController,
+      shopController,
+      currentAmountController,
+      targetAmountController;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: ConstrainedBox(
-        constraints: BoxConstraints.tight(const Size(100, 100)),
-        child: TextFormField(
-          maxLength: 5,
-          keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          decoration: InputDecoration(
-            border: const UnderlineInputBorder(),
-            labelText: label,
+      child: ElevatedButton(
+        child: Text(AppLocalizations.of(context)!.save),
+        onPressed: () => {
+          ApiService().updateProduct(
+            id,
+            ProductListElement(
+              category: categoryController.text.isNotEmpty
+                  ? categoryController.text
+                  : null,
+              product: productController.text.isNotEmpty
+                  ? productController.text
+                  : null,
+              source:
+                  shopController.text.isNotEmpty ? shopController.text : null,
+              currentAmount: currentAmountController.text.isNotEmpty
+                  ? int.parse(currentAmountController.text)
+                  : null,
+              targetAmount: targetAmountController.text.isNotEmpty
+                  ? int.parse(targetAmountController.text)
+                  : null,
+            ),
           ),
-        ),
+          categoryController.clear(),
+          productController.clear(),
+          shopController.clear(),
+          currentAmountController.clear(),
+          targetAmountController.clear(),
+          Navigator.pop(
+            context,
+          ),
+        },
       ),
-    );
-  }
-}
-
-class StringInputField extends StatelessWidget {
-  const StringInputField({
-    Key? key,
-    required this.context,
-    required this.label,
-  }) : super(key: key);
-
-  final BuildContext context;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          border: const UnderlineInputBorder(),
-          labelText: label,
-        ),
-      ),
-    );
-  }
-}
-
-class CancelButton extends StatelessWidget {
-  const CancelButton({
-    Key? key,
-    required this.context,
-  }) : super(key: key);
-
-  final BuildContext context;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.red[600]),
-        overlayColor: MaterialStateProperty.all(Colors.red[300]),
-      ),
-      onPressed: () => Navigator.pop(context),
-      child: Text(AppLocalizations.of(context)!.cancel),
-    );
-  }
-}
-
-class SaveButton extends StatelessWidget {
-  const SaveButton({
-    Key? key,
-    required this.context,
-  }) : super(key: key);
-
-  final BuildContext context;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      // TODO: implement
-      onPressed: () => {},
-      child: Text(AppLocalizations.of(context)!.save),
     );
   }
 }
