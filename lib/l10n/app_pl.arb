@@ -1,11 +1,21 @@
 {
     "language": "Polski",
     "shopping_list": "lista zakupów",
+    "product_list": "lista produktów",
     "add_product": "dodaj produkt",
     "edit_product": "edycja produktu",
     "product": "produkt",
     "shop": "sklep",
+    "category": "kategoria",
+    "target_amount": "ilość docelowa",
+    "current_amount": "ilość obecna",
     "count": "ilość",
     "save": "zapisz",
-    "cancel": "anuluj"
+    "cancel": "anuluj",
+    "login": "zaloguj się",
+    "username": "nazwa użytkownika",
+    "password": "hasło",
+    "forgot_password": "przypomnij hasło",
+    "sign_in": "utwórz konto",
+    "no_account": "nie masz konta?"
 }
