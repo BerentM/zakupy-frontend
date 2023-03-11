@@ -4,57 +4,78 @@ import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/api_service.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
 import 'package:zakupy_frontend/view/common/buttons.dart';
-import 'package:zakupy_frontend/view/product_list/widgets/input_fields.dart';
+import 'package:zakupy_frontend/view/common/input_fields.dart';
 
-class ProductListAddView extends StatefulWidget {
-  const ProductListAddView({Key? key}) : super(key: key);
+class ProductListEditView extends StatefulWidget {
+  const ProductListEditView({
+    Key? key,
+    required this.productData,
+    required this.backOffRoute,
+  }) : super(key: key);
+  final ProductListElement productData;
+  final String backOffRoute;
 
   @override
-  State<ProductListAddView> createState() => _ProductListAddViewState();
+  State<ProductListEditView> createState() => _ProductListEditViewState();
 }
 
-class _ProductListAddViewState extends State<ProductListAddView> {
+class _ProductListEditViewState extends State<ProductListEditView> {
   final categoryController = TextEditingController(),
       productController = TextEditingController(),
-      shopController = TextEditingController(),
+      sourceController = TextEditingController(),
       currentAmountController = TextEditingController(),
       targetAmountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final productData = widget.productData;
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.add_product),
+        title: Text(AppLocalizations.of(context)!.edit_product),
+        actions: [
+          IconButton(
+            onPressed: () {
+              ApiService().deleteProduct(productData.id!);
+              Navigator.popAndPushNamed(
+                context,
+                PRODUCT_LIST,
+              );
+            },
+            icon: const Icon(Icons.delete_forever),
+          )
+        ],
       ),
       body: ListView(
         children: [
           TextInput(
             textController: categoryController,
-            label: AppLocalizations.of(context)!.category,
+            label: productData.category!,
           ),
           TextInput(
             textController: productController,
-            label: AppLocalizations.of(context)!.product,
+            label: productData.product!,
           ),
           TextInput(
-            textController: shopController,
-            label: AppLocalizations.of(context)!.shop,
+            textController: sourceController,
+            label: productData.source!,
           ),
           Row(children: [
             NumberInput(
               textController: currentAmountController,
-              label: AppLocalizations.of(context)!.current_amount,
+              label: "${productData.currentAmount!}",
             ),
             NumberInput(
               textController: targetAmountController,
-              label: AppLocalizations.of(context)!.target_amount,
+              label: "${productData.targetAmount!}",
             ),
             _SaveButton(
+              id: productData.id!,
               categoryController: categoryController,
               productController: productController,
-              shopController: shopController,
+              shopController: sourceController,
               currentAmountController: currentAmountController,
               targetAmountController: targetAmountController,
+              backOffRoute: widget.backOffRoute,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -70,13 +91,17 @@ class _ProductListAddViewState extends State<ProductListAddView> {
 class _SaveButton extends StatelessWidget {
   const _SaveButton({
     Key? key,
+    required this.id,
     required this.categoryController,
     required this.productController,
     required this.shopController,
     required this.currentAmountController,
     required this.targetAmountController,
+    required this.backOffRoute,
   }) : super(key: key);
 
+  final String backOffRoute;
+  final int id;
   final TextEditingController categoryController,
       productController,
       shopController,
@@ -90,13 +115,23 @@ class _SaveButton extends StatelessWidget {
       child: ElevatedButton(
         child: Text(AppLocalizations.of(context)!.save),
         onPressed: () => {
-          ApiService().addProduct(
+          ApiService().updateProduct(
+            id,
             ProductListElement(
-              category: categoryController.text,
-              product: productController.text,
-              source: shopController.text,
-              currentAmount: int.parse(currentAmountController.text),
-              targetAmount: int.parse(targetAmountController.text),
+              category: categoryController.text.isNotEmpty
+                  ? categoryController.text
+                  : null,
+              product: productController.text.isNotEmpty
+                  ? productController.text
+                  : null,
+              source:
+                  shopController.text.isNotEmpty ? shopController.text : null,
+              currentAmount: currentAmountController.text.isNotEmpty
+                  ? int.parse(currentAmountController.text)
+                  : null,
+              targetAmount: targetAmountController.text.isNotEmpty
+                  ? int.parse(targetAmountController.text)
+                  : null,
             ),
           ),
           categoryController.clear(),
@@ -104,9 +139,10 @@ class _SaveButton extends StatelessWidget {
           shopController.clear(),
           currentAmountController.clear(),
           targetAmountController.clear(),
-          Navigator.popAndPushNamed(
+          Navigator.popUntil(context, ModalRoute.withName(HOME)),
+          Navigator.pushNamed(
             context,
-            PRODUCT_LIST,
+            backOffRoute,
           )
         },
       ),

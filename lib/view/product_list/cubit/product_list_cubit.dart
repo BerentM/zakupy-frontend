@@ -16,6 +16,11 @@ class ProductListCubit extends Cubit<ProductListState> {
     emit(ProductListLoaded(l));
   }
 
+  void updateProduct(ProductListElement product) async {
+    logger.d("update ${product.product}", component);
+    await ApiService().updateProduct(product.id!, product);
+  }
+
   void reloadData() async {
     logger.d("reloading data", component);
     emit(ProductListInitial());

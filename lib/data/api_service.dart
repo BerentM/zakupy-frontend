@@ -15,6 +15,7 @@ class ApiService {
       Uri.parse('$BASE_API_URL/shoppingList/all?missing_percent=0.1'),
     );
     http.StreamedResponse response = await request.send();
+    request.headers.addAll(jsonHeaders);
     if (response.statusCode == 200) {
       return productListFromJson(await response.stream.bytesToString());
     } else {
@@ -28,6 +29,7 @@ class ApiService {
       'GET',
       Uri.parse('$BASE_API_URL/productList/all'),
     );
+    request.headers.addAll(jsonHeaders);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       return productListFromJson(await response.stream.bytesToString());
@@ -42,6 +44,7 @@ class ApiService {
       'PATCH',
       Uri.parse('$BASE_API_URL/shoppingList/fill_up'),
     );
+    request.headers.addAll(jsonHeaders);
     logger.i("ids inside fillUp: $ids", component);
     request.body = json.encode(ids);
 
@@ -50,7 +53,8 @@ class ApiService {
     if (response.statusCode == 200) {
       logger.i(await response.stream.bytesToString(), component);
     } else {
-      logger.e(response.reasonPhrase, component);
+      logger.e(
+          "$request\n${request.body}\n${response.reasonPhrase}", component);
     }
   }
 
