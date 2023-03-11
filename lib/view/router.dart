@@ -25,6 +25,14 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => ProductListEditView(
             productData: settings.arguments as m.ProductListElement,
+            backOffRoute: PRODUCT_LIST,
+          ),
+        );
+      case EDIT_SHOPPING:
+        return MaterialPageRoute(
+          builder: (_) => ProductListEditView(
+            productData: settings.arguments as m.ProductListElement,
+            backOffRoute: SHOPPING_LIST,
           ),
         );
       default:

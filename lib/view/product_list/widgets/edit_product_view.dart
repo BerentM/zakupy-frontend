@@ -7,12 +7,13 @@ import 'package:zakupy_frontend/view/common/buttons.dart';
 import 'package:zakupy_frontend/view/common/input_fields.dart';
 
 class ProductListEditView extends StatefulWidget {
-  final ProductListElement productData;
-
   const ProductListEditView({
     Key? key,
     required this.productData,
+    required this.backOffRoute,
   }) : super(key: key);
+  final ProductListElement productData;
+  final String backOffRoute;
 
   @override
   State<ProductListEditView> createState() => _ProductListEditViewState();
@@ -74,6 +75,7 @@ class _ProductListEditViewState extends State<ProductListEditView> {
               shopController: sourceController,
               currentAmountController: currentAmountController,
               targetAmountController: targetAmountController,
+              backOffRoute: widget.backOffRoute,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -95,8 +97,10 @@ class _SaveButton extends StatelessWidget {
     required this.shopController,
     required this.currentAmountController,
     required this.targetAmountController,
+    required this.backOffRoute,
   }) : super(key: key);
 
+  final String backOffRoute;
   final int id;
   final TextEditingController categoryController,
       productController,
@@ -135,9 +139,10 @@ class _SaveButton extends StatelessWidget {
           shopController.clear(),
           currentAmountController.clear(),
           targetAmountController.clear(),
-          Navigator.popAndPushNamed(
+          Navigator.popUntil(context, ModalRoute.withName(HOME)),
+          Navigator.pushNamed(
             context,
-            PRODUCT_LIST,
+            backOffRoute,
           )
         },
       ),
