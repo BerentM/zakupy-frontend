@@ -1,52 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
+import 'package:zakupy_frontend/data/models/product_list.dart';
 
-import '../cubit/shopping_list_cubit.dart';
-import 'main_shopping_list_view.dart';
-
-class ShoppingListView extends StatelessWidget {
-  const ShoppingListView({Key? key}) : super(key: key);
+class ShoppingListView extends StatefulWidget {
+  final ProductList currentData;
+  const ShoppingListView({
+    Key? key,
+    required this.currentData,
+  }) : super(key: key);
 
   @override
+  State<ShoppingListView> createState() => _ShoppingListViewState();
+}
+
+class _ShoppingListViewState extends State<ShoppingListView> {
+  late List<ProductListElement> shoppingList = widget.currentData.productList;
+  int lastPos = 1;
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.shopping_list),
-        actions: [
-          BlocBuilder<ShoppingListCubit, ShoppingListState>(
-            builder: (context, state) {
-              return IconButton(
-                onPressed: () {
-                  if (state is ShoppingListLoaded) {
-                    context.read<ShoppingListCubit>().fillUp(state.currentData);
-                  }
-                },
-                icon: const Icon(Icons.save),
-              );
-            },
+    shoppingList.sort(
+      (a, b) => a.position.compareTo(b.position),
+    );
+    return ListView.builder(
+      itemCount: widget.currentData.count,
+      itemBuilder: (context, index) {
+        return ListTile(
+          selected: shoppingList[index].selected,
+          onTap: () => shoppingList[index].selected
+              ? setState(() {
+                  shoppingList[index].position = 0;
+                  shoppingList[index].selected = false;
+                })
+              : setState(() {
+                  lastPos += 1;
+                  shoppingList[index].position = lastPos;
+                  shoppingList[index].selected = true;
+                }),
+          onLongPress: () => Navigator.pushNamed(context, EDIT_PRODUCT,
+              arguments: shoppingList[index]),
+          leading: SizedBox(
+            height: double.infinity, // center icon
+            child: Icon(
+              Icons.shopping_cart,
+              color: shoppingList[index].selected ? Colors.green : Colors.grey,
+            ),
           ),
-          IconButton(
-            onPressed: () => Navigator.pushNamed(context, ADD_PRODUCT),
-            icon: const Icon(Icons.add),
-          )
-        ],
-      ),
-      body: BlocBuilder<ShoppingListCubit, ShoppingListState>(
-        builder: (context, state) {
-          if (state is ShoppingListInitial) {
-            context.read<ShoppingListCubit>().loadData();
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is ShoppingListLoaded) {
-            return MainShoppingListView(
-              currentData: state.currentData,
-            );
-          }
-          return const Scaffold();
-        },
-      ),
+          title: Text(shoppingList[index].product!),
+          trailing: Text(shoppingList[index].missingAmount.toString()),
+          subtitle: Text(shoppingList[index].source!),
+        );
+      },
     );
   }
 }
