@@ -19,6 +19,9 @@ class _ShoppingListViewState extends State<ShoppingListView> {
   @override
   Widget build(BuildContext context) {
     shoppingList.sort(
+      (a, b) => a.product!.compareTo(b.product!),
+    );
+    shoppingList.sort(
       (a, b) => a.position.compareTo(b.position),
     );
     return ListView.builder(

@@ -19,7 +19,7 @@ class _ProductListViewState extends State<ProductListView> {
   @override
   Widget build(BuildContext context) {
     productList.sort(
-      (a, b) => a.position.compareTo(b.position),
+      (a, b) => a.product!.compareTo(b.product!),
     );
     return ListView.builder(
       itemCount: widget.currentData.count,
