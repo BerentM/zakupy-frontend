@@ -4,7 +4,7 @@ import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/api_service.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
 import 'package:zakupy_frontend/view/common/buttons.dart';
-import 'package:zakupy_frontend/view/product_list/widgets/input_fields.dart';
+import 'package:zakupy_frontend/view/common/input_fields.dart';
 
 class ProductListAddView extends StatefulWidget {
   const ProductListAddView({Key? key}) : super(key: key);

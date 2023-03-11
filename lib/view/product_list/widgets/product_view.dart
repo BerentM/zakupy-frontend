@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
 
-class MainProductListView extends StatefulWidget {
+class ProductListView extends StatefulWidget {
   final ProductList currentData;
-  const MainProductListView({
+  const ProductListView({
     Key? key,
     required this.currentData,
   }) : super(key: key);
 
   @override
-  State<MainProductListView> createState() => _MainProductListViewState();
+  State<ProductListView> createState() => _ProductListViewState();
 }
 
-class _MainProductListViewState extends State<MainProductListView> {
+class _ProductListViewState extends State<ProductListView> {
   late List<ProductListElement> productList = widget.currentData.productList;
   int lastPos = 1;
   @override
