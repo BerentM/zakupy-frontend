@@ -16,12 +16,6 @@ class ProductList extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.product_list),
-          actions: [
-            IconButton(
-              onPressed: () => Navigator.pushNamed(context, ADD_PRODUCT),
-              icon: const Icon(Icons.add),
-            )
-          ],
         ),
         body: BlocBuilder<ProductListCubit, ProductListState>(
           builder: (context, state) {
@@ -36,6 +30,11 @@ class ProductList extends StatelessWidget {
             }
             return const Scaffold();
           },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => Navigator.pushNamed(context, ADD_PRODUCT),
+          backgroundColor: Colors.blue.withOpacity(0.7),
+          child: const Icon(Icons.add),
         ),
       ),
     );

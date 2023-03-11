@@ -27,15 +27,6 @@ class _ProductListViewState extends State<ProductListView> {
     }
   }
 
-  void increaseAmount(ProductListElement product) {
-    product.currentAmount = product.currentAmount! + 1;
-    if (product.currentAmount! > product.targetAmount!) {
-      product.targetAmount = product.targetAmount! + 1;
-    }
-    context.read<ProductListCubit>().updateProduct(product);
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     productList.sort(
@@ -47,7 +38,6 @@ class _ProductListViewState extends State<ProductListView> {
         return BlocBuilder<ProductListCubit, ProductListState>(
           builder: (context, state) {
             return GestureDetector(
-              onTap: () => increaseAmount(productList[index]),
               onDoubleTap: () => decreaseAmount(productList[index]),
               onLongPress: () => Navigator.pushNamed(context, EDIT_PRODUCT,
                   arguments: productList[index]),
