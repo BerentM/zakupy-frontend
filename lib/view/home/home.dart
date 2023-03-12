@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:zakupy_frontend/utils/logs.dart';
-import 'package:zakupy_frontend/utils/storage.dart';
 import 'package:zakupy_frontend/view/home/cubit/home_cubit.dart';
 
 class Home extends StatefulWidget {
@@ -18,7 +16,7 @@ class _HomeState extends State<Home> {
 
   List<Widget> buildChildren(BuildContext context, bool loggedIn) {
     var builder = [
-      const Text("Home"),
+      Text(AppLocalizations.of(context)!.home),
       ElevatedButton(
         onPressed: loggedIn
             ? (() => Navigator.pushNamed(context, SHOPPING_LIST))
@@ -43,7 +41,7 @@ class _HomeState extends State<Home> {
               Navigator.pop(context, true);
               Navigator.popAndPushNamed(context, HOME);
             }),
-            child: Text("logout"),
+            child: Text(AppLocalizations.of(context)!.log_out),
           ),
         ),
       );
@@ -67,7 +65,6 @@ class _HomeState extends State<Home> {
       create: (context) => HomeCubit(),
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
-          print(state);
           if (state is HomeInitial) {
             context.read<HomeCubit>().checkJwt();
           }

@@ -1,5 +1,6 @@
 {
     "language": "Polski",
+    "home": "głowna strona",
     "shopping_list": "lista zakupów",
     "product_list": "lista produktów",
     "add_product": "dodaj produkt",
@@ -17,5 +18,6 @@
     "password": "hasło",
     "forgot_password": "przypomnij hasło",
     "sign_in": "utwórz konto",
+    "log_out": "wyloguj",
     "no_account": "nie masz konta?"
 }

@@ -21,8 +21,8 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   void logOut() async {
-    await ApiService().logout();
     await storage.delete(key: "jwt");
+    await ApiService().logout();
     checkJwt();
   }
 }
