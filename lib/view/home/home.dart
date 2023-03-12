@@ -13,7 +13,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var component = "home screen";
-  String? token;
 
   List<Widget> buildChildren(BuildContext context) {
     var builder = [
@@ -29,19 +28,20 @@ class _HomeState extends State<Home> {
         ),
       ),
     ];
-    storage.read(key: "jwt").then((value) => token = value);
-    logger.d("jwt token: $token", component);
-
-    if (token == null) {
-      builder.add(
-        Center(
-          child: ElevatedButton(
-            onPressed: (() => Navigator.pushNamed(context, LOGIN)),
-            child: Text(AppLocalizations.of(context)!.login),
+    storage.read(key: "jwt").then((token) {
+      logger.d("jwt token: $token", component);
+      if (token == null) {
+        builder.add(
+          Center(
+            child: ElevatedButton(
+              onPressed: (() => Navigator.pushNamed(context, LOGIN)),
+              child: Text(AppLocalizations.of(context)!.login),
+            ),
           ),
-        ),
-      );
-    }
+        );
+      }
+    });
+
     return builder;
   }
 
