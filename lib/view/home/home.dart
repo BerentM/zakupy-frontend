@@ -41,6 +41,7 @@ class _HomeState extends State<Home> {
             onPressed: (() {
               context.read<HomeCubit>().logOut();
               Navigator.pop(context, true);
+              Navigator.popAndPushNamed(context, HOME);
             }),
             child: Text("logout"),
           ),
@@ -66,6 +67,7 @@ class _HomeState extends State<Home> {
       create: (context) => HomeCubit(),
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
+          print(state);
           if (state is HomeInitial) {
             context.read<HomeCubit>().checkJwt();
           }

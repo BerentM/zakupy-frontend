@@ -104,6 +104,7 @@ class _SaveButton extends StatelessWidget {
           shopController.clear(),
           currentAmountController.clear(),
           targetAmountController.clear(),
+          Navigator.pop(context, true),
           Navigator.popAndPushNamed(
             context,
             PRODUCT_LIST,
