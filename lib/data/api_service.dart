@@ -14,11 +14,12 @@ class ApiService {
   final url = kDebugMode ? LOCAL_API_URL : REMOTE_API_URL;
 
   Future<Map<String, String>> getHeaders() async {
-    var token = await storage.read(key: "jwt");
-    return {
+    var headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token'
+      'Authorization': 'Bearer ${await storage.read(key: "jwt")}'
     };
+    logger.d(headers, component);
+    return headers;
   }
 
   Future<ProductList> fetchShoppingList() async {
@@ -26,8 +27,8 @@ class ApiService {
       'GET',
       Uri.parse('$url/shoppingList/all?missing_percent=0.1'),
     );
-    http.StreamedResponse response = await request.send();
     request.headers.addAll(await getHeaders());
+    http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       return productListFromJson(await response.stream.bytesToString());
     } else {
