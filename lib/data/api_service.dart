@@ -1,21 +1,33 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:zakupy_frontend/data/models/auth.dart';
-import 'package:zakupy_frontend/utils/logs.dart';
+
 import 'package:zakupy_frontend/constants/strings.dart';
+import 'package:zakupy_frontend/data/models/auth.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
+import 'package:zakupy_frontend/utils/logs.dart';
+import 'package:zakupy_frontend/utils/storage.dart';
 
 class ApiService {
   final component = "ApiService";
-  final jsonHeaders = {'Content-Type': 'application/json'};
+  final url = kDebugMode ? LOCAL_API_URL : REMOTE_API_URL;
+
+  Future<Map<String, String>> getHeaders() async {
+    var token = await storage.read(key: "jwt");
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+  }
+
   Future<ProductList> fetchShoppingList() async {
     final request = http.Request(
       'GET',
-      Uri.parse('$BASE_API_URL/shoppingList/all?missing_percent=0.1'),
+      Uri.parse('$url/shoppingList/all?missing_percent=0.1'),
     );
     http.StreamedResponse response = await request.send();
-    request.headers.addAll(jsonHeaders);
+    request.headers.addAll(await getHeaders());
     if (response.statusCode == 200) {
       return productListFromJson(await response.stream.bytesToString());
     } else {
@@ -27,13 +39,14 @@ class ApiService {
   Future<ProductList> fetchProductList() async {
     final request = http.Request(
       'GET',
-      Uri.parse('$BASE_API_URL/productList/all'),
+      Uri.parse('$url/productList/all'),
     );
-    request.headers.addAll(jsonHeaders);
+    request.headers.addAll(await getHeaders());
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       return productListFromJson(await response.stream.bytesToString());
     } else {
+      logger.d(request.headers);
       logger.i("empty productList/all response", component);
       return productListFromJson("");
     }
@@ -42,9 +55,9 @@ class ApiService {
   Future<void> fillUp(List<int> ids) async {
     var request = http.Request(
       'PATCH',
-      Uri.parse('$BASE_API_URL/shoppingList/fill_up'),
+      Uri.parse('$url/shoppingList/fill_up'),
     );
-    request.headers.addAll(jsonHeaders);
+    request.headers.addAll(await getHeaders());
     logger.i("ids inside fillUp: $ids", component);
     request.body = json.encode(ids);
 
@@ -62,7 +75,7 @@ class ApiService {
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var request = http.Request(
       'POST',
-      Uri.parse('$BASE_API_URL/auth/jwt/login'),
+      Uri.parse('$url/auth/jwt/login'),
     );
     request.bodyFields = {'username': username, 'password': password};
     request.headers.addAll(headers);
@@ -80,10 +93,10 @@ class ApiService {
   Future<ProductListElement> addProduct(ProductListElement data) async {
     var request = http.Request(
       'POST',
-      Uri.parse('$BASE_API_URL/productList/create_item'),
+      Uri.parse('$url/productList/create_item'),
     );
     request.body = productListElementToJson(data);
-    request.headers.addAll(jsonHeaders);
+    request.headers.addAll(await getHeaders());
     logger.d(request.body, component);
     http.StreamedResponse response = await request.send();
 
@@ -99,10 +112,10 @@ class ApiService {
     int id,
     ProductListElement data,
   ) async {
-    var request = http.Request(
-        'PATCH', Uri.parse('$BASE_API_URL/productList/update_item?id=$id'));
+    var request =
+        http.Request('PATCH', Uri.parse('$url/productList/update_item?id=$id'));
     request.body = productListElementToJson(data);
-    request.headers.addAll(jsonHeaders);
+    request.headers.addAll(await getHeaders());
 
     http.StreamedResponse response = await request.send();
 
@@ -117,9 +130,9 @@ class ApiService {
   void deleteProduct(int id) async {
     var request = http.Request(
       'DELETE',
-      Uri.parse('$BASE_API_URL/productList/delete_item?id=$id'),
+      Uri.parse('$url/productList/delete_item?id=$id'),
     );
-    request.headers.addAll(jsonHeaders);
+    request.headers.addAll(await getHeaders());
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {

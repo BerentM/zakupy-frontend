@@ -74,8 +74,7 @@ class _LoginViewState extends State<LoginView> {
                               nameController.text,
                               passwordController.text,
                             );
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            HOME, (Route<dynamic> route) => false);
+                        Navigator.popAndPushNamed(context, HOME);
                       },
                     )),
                 Row(
