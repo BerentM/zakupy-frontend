@@ -38,7 +38,6 @@ class _HomeState extends State<Home> {
           child: ElevatedButton(
             onPressed: (() {
               context.read<HomeCubit>().logOut();
-              Navigator.pop(context, true);
               Navigator.popAndPushNamed(context, HOME);
             }),
             child: Text(AppLocalizations.of(context)!.log_out),
