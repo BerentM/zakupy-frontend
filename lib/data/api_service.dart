@@ -95,6 +95,23 @@ class ApiService {
     }
   }
 
+  Future<void> logout() async {
+    final request = http.Request(
+      'POST',
+      Uri.parse('$url/auth/jwt/logout'),
+    );
+    request.headers.addAll(await getHeaders());
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      logger.d(await response.stream.bytesToString(), component);
+    } else {
+      logger.e(response.reasonPhrase, component);
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
   Future<ProductListElement> addProduct(ProductListElement data) async {
     var request = http.Request(
       'POST',
