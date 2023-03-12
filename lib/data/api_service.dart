@@ -19,6 +19,7 @@ class ApiService {
       'Authorization': 'Bearer ${await storage.read(key: "jwt")}'
     };
     logger.d(headers, component);
+
     return headers;
   }
 
@@ -28,7 +29,9 @@ class ApiService {
       Uri.parse('$url/shoppingList/all?missing_percent=0.1'),
     );
     request.headers.addAll(await getHeaders());
+
     http.StreamedResponse response = await request.send();
+
     if (response.statusCode == 200) {
       return productListFromJson(await response.stream.bytesToString());
     } else {
@@ -43,11 +46,12 @@ class ApiService {
       Uri.parse('$url/productList/all'),
     );
     request.headers.addAll(await getHeaders());
+
     http.StreamedResponse response = await request.send();
+
     if (response.statusCode == 200) {
       return productListFromJson(await response.stream.bytesToString());
     } else {
-      logger.d(request.headers);
       logger.i("empty productList/all response", component);
       return productListFromJson("");
     }
@@ -98,6 +102,7 @@ class ApiService {
     );
     request.body = productListElementToJson(data);
     request.headers.addAll(await getHeaders());
+
     logger.d(request.body, component);
     http.StreamedResponse response = await request.send();
 
@@ -134,6 +139,7 @@ class ApiService {
       Uri.parse('$url/productList/delete_item?id=$id'),
     );
     request.headers.addAll(await getHeaders());
+
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
