@@ -3,6 +3,7 @@
     "@language": {
         "description": "Current language"
     },
+    "home": "home",
     "shopping_list": "shopping list",
     "add_product": "add product",
     "product_list": "product list",
@@ -20,5 +21,6 @@
     "password": "password",
     "forgot_password": "forgot password",
     "sign_in": "sign in",
+    "log_out": "log out",
     "no_account": "don't have account?"
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:zakupy_frontend/utils/logs.dart';
-import 'package:zakupy_frontend/utils/storage.dart';
+import 'package:zakupy_frontend/view/home/cubit/home_cubit.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,26 +13,39 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var component = "home screen";
-  String? token;
 
-  List<Widget> buildChildren(BuildContext context) {
+  List<Widget> buildChildren(BuildContext context, bool loggedIn) {
     var builder = [
-      const Text("Home"),
+      Text(AppLocalizations.of(context)!.home),
       ElevatedButton(
-        onPressed: (() => Navigator.pushNamed(context, SHOPPING_LIST)),
+        onPressed: loggedIn
+            ? (() => Navigator.pushNamed(context, SHOPPING_LIST))
+            : null,
         child: Text(AppLocalizations.of(context)!.shopping_list),
       ),
       Center(
         child: ElevatedButton(
-          onPressed: (() => Navigator.pushNamed(context, PRODUCT_LIST)),
+          onPressed: loggedIn
+              ? (() => Navigator.pushNamed(context, PRODUCT_LIST))
+              : null,
           child: Text(AppLocalizations.of(context)!.product_list),
         ),
       ),
     ];
-    storage.read(key: "jwt").then((value) => token = value);
-    logger.d("jwt token: $token", component);
-
-    if (token == null) {
+    if (loggedIn) {
+      builder.add(
+        Center(
+          child: ElevatedButton(
+            onPressed: (() {
+              context.read<HomeCubit>().logOut();
+              Navigator.pop(context, true);
+              Navigator.popAndPushNamed(context, HOME);
+            }),
+            child: Text(AppLocalizations.of(context)!.log_out),
+          ),
+        ),
+      );
+    } else {
       builder.add(
         Center(
           child: ElevatedButton(
@@ -42,15 +55,37 @@ class _HomeState extends State<Home> {
         ),
       );
     }
+
     return builder;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: buildChildren(context)),
+    return BlocProvider(
+      create: (context) => HomeCubit(),
+      child: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          if (state is HomeInitial) {
+            context.read<HomeCubit>().checkJwt();
+          }
+          if (state is HomeLoggedIn) {
+            return Scaffold(
+              body: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: buildChildren(context, true)),
+            );
+          }
+          if (state is HomeLoggedOut) {
+            return Scaffold(
+              body: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: buildChildren(context, false)),
+            );
+          } else {
+            return const Scaffold();
+          }
+        },
+      ),
     );
   }
 }

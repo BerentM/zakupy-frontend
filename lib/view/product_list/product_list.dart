@@ -16,6 +16,12 @@ class ProductList extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.product_list),
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context, true);
+                Navigator.popAndPushNamed(context, HOME);
+              }),
         ),
         body: BlocBuilder<ProductListCubit, ProductListState>(
           builder: (context, state) {

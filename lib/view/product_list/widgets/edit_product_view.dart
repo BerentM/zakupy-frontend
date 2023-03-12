@@ -36,6 +36,7 @@ class _ProductListEditViewState extends State<ProductListEditView> {
           IconButton(
             onPressed: () {
               ApiService().deleteProduct(productData.id!);
+              Navigator.pop(context, true);
               Navigator.popAndPushNamed(
                 context,
                 PRODUCT_LIST,
@@ -140,7 +141,7 @@ class _SaveButton extends StatelessWidget {
           currentAmountController.clear(),
           targetAmountController.clear(),
           Navigator.popUntil(context, ModalRoute.withName(HOME)),
-          Navigator.pushNamed(
+          Navigator.popAndPushNamed(
             context,
             backOffRoute,
           )

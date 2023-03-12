@@ -20,6 +20,12 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.login),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context, true);
+              Navigator.popAndPushNamed(context, HOME);
+            }),
         actions: [
           IconButton(
             onPressed: () {},
@@ -74,8 +80,8 @@ class _LoginViewState extends State<LoginView> {
                               nameController.text,
                               passwordController.text,
                             );
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            HOME, (Route<dynamic> route) => false);
+                        Navigator.pop(context, true);
+                        Navigator.popAndPushNamed(context, HOME);
                       },
                     )),
                 Row(
