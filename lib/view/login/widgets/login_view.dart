@@ -23,7 +23,6 @@ class _LoginViewState extends State<LoginView> {
         leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context, true);
               Navigator.popAndPushNamed(context, HOME);
             }),
         actions: [
@@ -80,7 +79,6 @@ class _LoginViewState extends State<LoginView> {
                               nameController.text,
                               passwordController.text,
                             );
-                        Navigator.pop(context, true);
                         Navigator.popAndPushNamed(context, HOME);
                       },
                     )),

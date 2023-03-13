@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/api_service.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
 import 'package:zakupy_frontend/view/common/buttons.dart';
@@ -23,11 +22,21 @@ class _ProductListEditViewState extends State<ProductListEditView> {
   @override
   Widget build(BuildContext context) {
     final productData = widget.productData;
-    final categoryController = TextEditingController(text: productData.category!),
-        productController = TextEditingController(text: productData.product!),
-        sourceController = TextEditingController(text: productData.source!),
-        currentAmountController = TextEditingController(text: productData.currentAmount!.toString()),
-        targetAmountController = TextEditingController(text: productData.targetAmount!.toString());
+    final categoryController = TextEditingController(
+          text: productData.category!,
+        ),
+        productController = TextEditingController(
+          text: productData.product!,
+        ),
+        sourceController = TextEditingController(
+          text: productData.source!,
+        ),
+        currentAmountController = TextEditingController(
+          text: productData.currentAmount!.toString(),
+        ),
+        targetAmountController = TextEditingController(
+          text: productData.targetAmount!.toString(),
+        );
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.edit_product),
@@ -37,7 +46,7 @@ class _ProductListEditViewState extends State<ProductListEditView> {
               ApiService().deleteProduct(productData.id!);
               Navigator.popAndPushNamed(
                 context,
-                PRODUCT_LIST,
+                widget.backOffRoute,
               );
             },
             icon: const Icon(Icons.delete_forever),

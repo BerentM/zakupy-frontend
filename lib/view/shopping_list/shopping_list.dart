@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,7 +19,6 @@ class ShoppingList extends StatelessWidget {
             leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
-                  Navigator.pop(context, true);
                   Navigator.popAndPushNamed(context, HOME);
                 }),
           ),
