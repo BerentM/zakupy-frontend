@@ -29,16 +29,16 @@ class _ProductListAddViewState extends State<ProductListAddView> {
       body: ListView(
         children: [
           TextInput(
-            textController: categoryController,
-            label: AppLocalizations.of(context)!.category,
-          ),
-          TextInput(
             textController: productController,
             label: AppLocalizations.of(context)!.product,
           ),
           TextInput(
             textController: shopController,
             label: AppLocalizations.of(context)!.shop,
+          ),
+          TextInput(
+            textController: categoryController,
+            label: AppLocalizations.of(context)!.category,
           ),
           Row(children: [
             NumberInput(

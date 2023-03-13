@@ -5,11 +5,11 @@ class NumberInput extends StatelessWidget {
   const NumberInput({
     Key? key,
     required this.textController,
-    required this.label,
+    this.label,
   }) : super(key: key);
 
   final TextEditingController textController;
-  final String label;
+  final String? label;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,7 @@ class NumberInput extends StatelessWidget {
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           decoration: InputDecoration(
+            counterText: '',
             border: const UnderlineInputBorder(),
             labelText: label,
           ),
@@ -36,11 +37,11 @@ class TextInput extends StatefulWidget {
   const TextInput({
     Key? key,
     required this.textController,
-    required this.label,
+    this.label,
   }) : super(key: key);
 
   final TextEditingController textController;
-  final String label;
+  final String? label;
 
   @override
   State<TextInput> createState() => _TextInputState();
