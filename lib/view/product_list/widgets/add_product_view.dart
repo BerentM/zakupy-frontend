@@ -29,16 +29,16 @@ class _ProductListAddViewState extends State<ProductListAddView> {
       body: ListView(
         children: [
           TextInput(
-            textController: categoryController,
-            label: AppLocalizations.of(context)!.category,
-          ),
-          TextInput(
             textController: productController,
             label: AppLocalizations.of(context)!.product,
           ),
           TextInput(
             textController: shopController,
             label: AppLocalizations.of(context)!.shop,
+          ),
+          TextInput(
+            textController: categoryController,
+            label: AppLocalizations.of(context)!.category,
           ),
           Row(children: [
             NumberInput(
@@ -99,12 +99,6 @@ class _SaveButton extends StatelessWidget {
               targetAmount: int.parse(targetAmountController.text),
             ),
           ),
-          categoryController.clear(),
-          productController.clear(),
-          shopController.clear(),
-          currentAmountController.clear(),
-          targetAmountController.clear(),
-          Navigator.pop(context, true),
           Navigator.popAndPushNamed(
             context,
             PRODUCT_LIST,

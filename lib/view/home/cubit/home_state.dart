@@ -12,3 +12,5 @@ class HomeInitial extends HomeState {}
 class HomeLoggedOut extends HomeState {}
 
 class HomeLoggedIn extends HomeState {}
+
+class HomeLogIn extends HomeState {}

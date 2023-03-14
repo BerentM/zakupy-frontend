@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:zakupy_frontend/view/home/cubit/home_cubit.dart';
+import 'package:zakupy_frontend/view/home/widgets/login.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -48,7 +49,7 @@ class _HomeState extends State<Home> {
       builder.add(
         Center(
           child: ElevatedButton(
-            onPressed: (() => Navigator.pushNamed(context, LOGIN)),
+            onPressed: (() => context.read<HomeCubit>().loginPage()),
             child: Text(AppLocalizations.of(context)!.login),
           ),
         ),
@@ -80,6 +81,9 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: buildChildren(context, false)),
             );
+          }
+          if (state is HomeLogIn) {
+            return const Login();
           } else {
             return const Scaffold();
           }

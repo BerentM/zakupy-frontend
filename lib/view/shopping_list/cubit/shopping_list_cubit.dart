@@ -10,13 +10,13 @@ class ShoppingListCubit extends Cubit<ShoppingListState> {
   final component = "ShoppingListCubit";
   ShoppingListCubit() : super(ShoppingListInitial());
 
-  void loadData() async {
+  Future<void> loadData() async {
     logger.d("fetching shopping list data", component);
     var l = await ApiService().fetchShoppingList();
     emit(ShoppingListLoaded(l));
   }
 
-  void fillUp(ProductList products) async {
+  Future<void> fillUp(ProductList products) async {
     logger.d("fill up missing products", component);
     List<int> ids = [];
     for (var product in products.productList) {
@@ -33,7 +33,7 @@ class ShoppingListCubit extends Cubit<ShoppingListState> {
     }
   }
 
-  void reloadData() async {
+  Future<void> reloadData() async {
     logger.d("reloading data", component);
     emit(ShoppingListInitial());
   }

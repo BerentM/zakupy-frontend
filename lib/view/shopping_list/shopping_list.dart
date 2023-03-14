@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,7 +19,6 @@ class ShoppingList extends StatelessWidget {
             leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
-                  Navigator.pop(context, true);
                   Navigator.popAndPushNamed(context, HOME);
                 }),
           ),
@@ -32,8 +29,11 @@ class ShoppingList extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
               if (state is ShoppingListLoaded) {
-                return ShoppingListView(
-                  currentData: state.currentData,
+                return RefreshIndicator(
+                  onRefresh: context.read<ShoppingListCubit>().reloadData,
+                  child: ShoppingListView(
+                    currentData: state.currentData,
+                  ),
                 );
               }
               return const Scaffold();
