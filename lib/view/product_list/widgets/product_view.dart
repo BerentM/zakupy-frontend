@@ -30,7 +30,7 @@ class _ProductListViewState extends State<ProductListView> {
   @override
   Widget build(BuildContext context) {
     productList.sort(
-      (a, b) => a.product!.compareTo(b.product!),
+      (a, b) => a.product!.toLowerCase().compareTo(b.product!.toLowerCase()),
     );
     return ListView.builder(
       itemCount: widget.currentData.count,

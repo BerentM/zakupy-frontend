@@ -99,11 +99,6 @@ class _SaveButton extends StatelessWidget {
               targetAmount: int.parse(targetAmountController.text),
             ),
           ),
-          categoryController.clear(),
-          productController.clear(),
-          shopController.clear(),
-          currentAmountController.clear(),
-          targetAmountController.clear(),
           Navigator.popAndPushNamed(
             context,
             PRODUCT_LIST,
