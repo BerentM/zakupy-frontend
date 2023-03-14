@@ -2,39 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
-import 'package:zakupy_frontend/view/login/cubit/login_cubit.dart';
+import 'package:zakupy_frontend/view/home/cubit/home_cubit.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<Login> createState() => _LoginState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginState extends State<Login> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.login),
-        leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.popAndPushNamed(context, HOME);
-            }),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.add),
-          )
-        ],
-      ),
-      body: BlocBuilder<LoginCubit, LoginState>(
-        builder: (context, state) {
-          if (state is LoginInitial) {
+    return BlocProvider(
+      create: (context) => HomeCubit(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.login),
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.popAndPushNamed(context, HOME);
+              }),
+        ),
+        body: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
             return ListView(
               children: [
                 const SizedBox(
@@ -75,11 +70,11 @@ class _LoginViewState extends State<LoginView> {
                     child: ElevatedButton(
                       child: Text(AppLocalizations.of(context)!.login),
                       onPressed: () {
-                        context.read<LoginCubit>().getToken(
+                        context.read<HomeCubit>().logIn(
                               nameController.text,
                               passwordController.text,
+                              context,
                             );
-                        Navigator.popAndPushNamed(context, HOME);
                       },
                     )),
                 Row(
@@ -96,9 +91,8 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ],
             );
-          }
-          return const Scaffold();
-        },
+          },
+        ),
       ),
     );
   }
