@@ -10,18 +10,18 @@ class ProductListCubit extends Cubit<ProductListState> {
   final component = "ProductListCubit";
   ProductListCubit() : super(ProductListInitial());
 
-  void loadData() async {
+  Future<void> loadData() async {
     logger.d("fetching data", component);
     var l = await ApiService().fetchProductList();
     emit(ProductListLoaded(l));
   }
 
-  void updateProduct(ProductListElement product) async {
+  Future<void> updateProduct(ProductListElement product) async {
     logger.d("update ${product.product}", component);
     await ApiService().updateProduct(product.id!, product);
   }
 
-  void reloadData() async {
+  Future<void> reloadData() async {
     logger.d("reloading data", component);
     emit(ProductListInitial());
   }

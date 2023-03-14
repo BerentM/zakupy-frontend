@@ -29,8 +29,11 @@ class ShoppingList extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
               if (state is ShoppingListLoaded) {
-                return ShoppingListView(
-                  currentData: state.currentData,
+                return RefreshIndicator(
+                  onRefresh: context.read<ShoppingListCubit>().reloadData,
+                  child: ShoppingListView(
+                    currentData: state.currentData,
+                  ),
                 );
               }
               return const Scaffold();
