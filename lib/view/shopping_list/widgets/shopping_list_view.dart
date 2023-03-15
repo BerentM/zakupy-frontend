@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zakupy_frontend/view/common/misc.dart';
 
 class ShoppingListView extends StatefulWidget {
   final ProductList currentData;
@@ -19,24 +20,11 @@ class _ShoppingListViewState extends State<ShoppingListView> {
   int lastPos = 1;
 
   void _runFilter(String searchedString) {
-    List<ProductListElement> output;
-    if (searchedString.isEmpty) {
-      output = widget.currentData.productList;
-    } else {
-      var productOutput = widget.currentData.productList
-          .where((value) => value.product!
-              .toLowerCase()
-              .contains(searchedString.toLowerCase()))
-          .toList();
-      var sourceOutput = widget.currentData.productList
-          .where((value) => value.source!
-              .toLowerCase()
-              .contains(searchedString.toLowerCase()))
-          .toList();
-      output = [...productOutput, ...sourceOutput];
-    }
     setState(() {
-      shoppingList = output;
+      shoppingList = filterProductList(
+        searchedString,
+        widget.currentData.productList,
+      );
     });
   }
 

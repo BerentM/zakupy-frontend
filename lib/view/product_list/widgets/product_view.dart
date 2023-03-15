@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
+import 'package:zakupy_frontend/view/common/misc.dart';
 import 'package:zakupy_frontend/view/product_list/cubit/product_list_cubit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -21,24 +22,11 @@ class _ProductListViewState extends State<ProductListView> {
   int lastPos = 1;
 
   void _runFilter(String searchedString) {
-    List<ProductListElement> output;
-    if (searchedString.isEmpty) {
-      output = widget.currentData.productList;
-    } else {
-      var productOutput = widget.currentData.productList
-          .where((value) => value.product!
-              .toLowerCase()
-              .contains(searchedString.toLowerCase()))
-          .toList();
-      var sourceOutput = widget.currentData.productList
-          .where((value) => value.source!
-              .toLowerCase()
-              .contains(searchedString.toLowerCase()))
-          .toList();
-      output = [...productOutput, ...sourceOutput];
-    }
     setState(() {
-      productList = output;
+      productList = filterProductList(
+        searchedString,
+        widget.currentData.productList,
+      );
     });
   }
 
