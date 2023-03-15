@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
 import 'package:zakupy_frontend/view/product_list/cubit/product_list_cubit.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProductListView extends StatefulWidget {
   final ProductList currentData;
@@ -19,6 +20,28 @@ class _ProductListViewState extends State<ProductListView> {
   late List<ProductListElement> productList = widget.currentData.productList;
   int lastPos = 1;
 
+  void _runFilter(String searchedString) {
+    List<ProductListElement> output;
+    if (searchedString.isEmpty) {
+      output = widget.currentData.productList;
+    } else {
+      var productOutput = widget.currentData.productList
+          .where((value) => value.product!
+              .toLowerCase()
+              .contains(searchedString.toLowerCase()))
+          .toList();
+      var sourceOutput = widget.currentData.productList
+          .where((value) => value.source!
+              .toLowerCase()
+              .contains(searchedString.toLowerCase()))
+          .toList();
+      output = [...productOutput, ...sourceOutput];
+    }
+    setState(() {
+      productList = output;
+    });
+  }
+
   void decreaseAmount(ProductListElement product) {
     if (product.currentAmount! > 0) {
       product.currentAmount = product.currentAmount! - 1;
@@ -32,33 +55,47 @@ class _ProductListViewState extends State<ProductListView> {
     productList.sort(
       (a, b) => a.product!.toLowerCase().compareTo(b.product!.toLowerCase()),
     );
-    return ListView.builder(
-      itemCount: widget.currentData.count,
-      itemBuilder: (context, index) {
-        return BlocBuilder<ProductListCubit, ProductListState>(
-          builder: (context, state) {
-            return GestureDetector(
-              onDoubleTap: () => decreaseAmount(productList[index]),
-              onLongPress: () => Navigator.pushNamed(context, EDIT_PRODUCT,
-                  arguments: productList[index]),
-              child: ListTile(
-                selected: productList[index].selected,
-                leading: const SizedBox(
-                  height: double.infinity, // center icon
-                  child: Icon(
-                    Icons.shopping_cart,
-                    color: Colors.grey,
+
+    return Column(children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          onChanged: (value) => _runFilter(value),
+          decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.search,
+              suffixIcon: Icon(Icons.search)),
+        ),
+      ),
+      Expanded(
+        child: ListView.builder(
+          itemCount: productList.length,
+          itemBuilder: (context, index) {
+            return BlocBuilder<ProductListCubit, ProductListState>(
+              builder: (context, state) {
+                return GestureDetector(
+                  onDoubleTap: () => decreaseAmount(productList[index]),
+                  onLongPress: () => Navigator.pushNamed(context, EDIT_PRODUCT,
+                      arguments: productList[index]),
+                  child: ListTile(
+                    selected: productList[index].selected,
+                    leading: const SizedBox(
+                      height: double.infinity, // center icon
+                      child: Icon(
+                        Icons.shopping_cart,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    title: Text(productList[index].product!),
+                    trailing: Text(
+                        "${productList[index].currentAmount.toString()}/${productList[index].targetAmount.toString()}"),
+                    subtitle: Text(productList[index].source!),
                   ),
-                ),
-                title: Text(productList[index].product!),
-                trailing: Text(
-                    "${productList[index].currentAmount.toString()}/${productList[index].targetAmount.toString()}"),
-                subtitle: Text(productList[index].source!),
-              ),
+                );
+              },
             );
           },
-        );
-      },
-    );
+        ),
+      )
+    ]);
   }
 }

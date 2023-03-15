@@ -19,5 +19,6 @@
     "forgot_password": "przypomnij hasło",
     "sign_in": "utwórz konto",
     "log_out": "wyloguj",
-    "no_account": "nie masz konta?"
+    "no_account": "nie masz konta?",
+    "search": "wyszukaj"
 }

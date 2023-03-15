@@ -22,5 +22,6 @@
     "forgot_password": "forgot password",
     "sign_in": "sign in",
     "log_out": "log out",
-    "no_account": "don't have account?"
+    "no_account": "don't have account?",
+    "search": "search"
 }
