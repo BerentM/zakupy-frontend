@@ -57,19 +57,24 @@ class _ProductListEditViewState extends State<ProductListEditView> {
         children: [
           TextInput(
             textController: productController,
+            label: AppLocalizations.of(context)!.product,
           ),
           TextInput(
             textController: sourceController,
+            label: AppLocalizations.of(context)!.shop,
           ),
           TextInput(
             textController: categoryController,
+            label: AppLocalizations.of(context)!.category,
           ),
           Row(children: [
             NumberInput(
               textController: currentAmountController,
+              label: AppLocalizations.of(context)!.current_amount,
             ),
             NumberInput(
               textController: targetAmountController,
+              label: AppLocalizations.of(context)!.target_amount,
             ),
             _SaveButton(
               id: productData.id!,
