@@ -72,7 +72,7 @@ class _TextInputState extends State<TextInput> {
 }
 
 // TODO: tmp list, api calls should be used in stead of const list
-const List<String> list = <String>["", 'One', 'Two', 'Three', 'Four'];
+const List<String> list = ['One', 'Two', 'Three', 'Four'];
 
 class DropdownField extends StatefulWidget {
   const DropdownField({
@@ -93,10 +93,12 @@ class _DropdownFieldState extends State<DropdownField> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InputDecorator(
-        decoration: InputDecoration(label: Text(widget.label)),
+        decoration: InputDecoration(labelText: widget.label),
         child: DropdownButtonHideUnderline(
           child: DropdownButton(
-            value: widget.textController.text,
+            value: widget.textController.text.isNotEmpty
+                ? widget.textController.text
+                : null,
             elevation: 16,
             isDense: true,
             isExpanded: true,
