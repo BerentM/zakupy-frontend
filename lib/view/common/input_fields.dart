@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NumberInput extends StatelessWidget {
   const NumberInput({
@@ -66,6 +67,91 @@ class _TextInputState extends State<TextInput> {
           labelText: widget.label,
         ),
       ),
+    );
+  }
+}
+
+// TODO: tmp list, api calls should be used in stead of const list
+const List<String> list = <String>["", 'One', 'Two', 'Three', 'Four'];
+
+class DropdownField extends StatefulWidget {
+  const DropdownField({
+    super.key,
+    required this.textController,
+    required this.label,
+  });
+  final TextEditingController textController;
+  final String label;
+
+  @override
+  State<DropdownField> createState() => _DropdownFieldState();
+}
+
+class _DropdownFieldState extends State<DropdownField> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InputDecorator(
+        decoration: InputDecoration(label: Text(widget.label)),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton(
+            value: widget.textController.text,
+            elevation: 16,
+            isDense: true,
+            isExpanded: true,
+            onChanged: (String? value) {
+              setState(() {
+                widget.textController.text = value!;
+              });
+            },
+            items: list.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DropdownPopup extends StatelessWidget {
+  const DropdownPopup({Key? key, required this.popupName}) : super(key: key);
+  final String popupName;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      iconSize: 24.0,
+      color: Colors.grey,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Form(
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: popupName,
+                    icon: const Icon(Icons.category),
+                  ),
+                ),
+              ),
+              actions: [
+                ElevatedButton(
+                    child: Text(AppLocalizations.of(context)!.save),
+                    onPressed: () {
+                      // TODO: API cal
+                    })
+              ],
+            );
+          },
+        );
+      },
+      icon: const Icon(Icons.add),
     );
   }
 }

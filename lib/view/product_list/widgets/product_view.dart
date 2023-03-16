@@ -51,7 +51,7 @@ class _ProductListViewState extends State<ProductListView> {
           onChanged: (value) => _runFilter(value),
           decoration: InputDecoration(
               labelText: AppLocalizations.of(context)!.search,
-              suffixIcon: Icon(Icons.search)),
+              suffixIcon: const Icon(Icons.search)),
         ),
       ),
       Expanded(

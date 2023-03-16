@@ -59,14 +59,24 @@ class _ProductListEditViewState extends State<ProductListEditView> {
             textController: productController,
             label: AppLocalizations.of(context)!.product,
           ),
-          TextInput(
-            textController: sourceController,
-            label: AppLocalizations.of(context)!.shop,
-          ),
-          TextInput(
-            textController: categoryController,
-            label: AppLocalizations.of(context)!.category,
-          ),
+          Row(children: [
+            Expanded(
+              child: DropdownField(
+                textController: sourceController,
+                label: AppLocalizations.of(context)!.shop,
+              ),
+            ),
+            DropdownPopup(popupName: AppLocalizations.of(context)!.shop),
+          ]),
+          Row(children: [
+            Expanded(
+              child: DropdownField(
+                textController: categoryController,
+                label: AppLocalizations.of(context)!.category,
+              ),
+            ),
+            DropdownPopup(popupName: AppLocalizations.of(context)!.category),
+          ]),
           Row(children: [
             NumberInput(
               textController: currentAmountController,
