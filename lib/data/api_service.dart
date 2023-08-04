@@ -8,10 +8,13 @@ import 'package:zakupy_frontend/data/models/auth.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
 import 'package:zakupy_frontend/utils/logs.dart';
 import 'package:zakupy_frontend/utils/storage.dart';
+import 'package:pocketbase/pocketbase.dart';
 
 class ApiService {
   final component = "ApiService";
   final url = kDebugMode ? LOCAL_API_URL : REMOTE_API_URL;
+  // TODO: deduplicate
+  final pb = PocketBase(kDebugMode ? LOCAL_API_URL : REMOTE_API_URL);
 
   Future<Map<String, String>> getHeaders() async {
     var headers = {
@@ -77,21 +80,16 @@ class ApiService {
   }
 
   Future<JwtLogin> login(String username, password) async {
-    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var request = http.Request(
-      'POST',
-      Uri.parse('$url/auth/jwt/login'),
-    );
-    request.bodyFields = {'username': username, 'password': password};
-    request.headers.addAll(headers);
+    final authData = await pb.collection('users').authWithPassword(
+          username,
+          password,
+        );
 
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      return jwtLoginFromJson(await response.stream.bytesToString());
+    if (authData.token != null) {
+      return JwtLogin(accessToken: authData.token, tokenType: "tmp");
     } else {
-      logger.e(response.reasonPhrase, component);
-      throw Exception(response.reasonPhrase);
+      logger.e("Unsucesfull login");
+      throw Exception("Unsucesfull login");
     }
   }
 
