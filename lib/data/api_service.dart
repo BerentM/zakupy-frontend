@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,8 +11,8 @@ import 'package:pocketbase/pocketbase.dart';
 
 class ApiService {
   final component = "ApiService";
-  final url = kDebugMode ? LOCAL_API_URL : REMOTE_API_URL;
   // TODO: deduplicate
+  final url = kDebugMode ? LOCAL_API_URL : REMOTE_API_URL;
   final pb = PocketBase(kDebugMode ? LOCAL_API_URL : REMOTE_API_URL);
 
   Future<Map<String, String>> getHeaders() async {
@@ -50,25 +48,28 @@ class ApiService {
   }
 
   Future<void> fillUp(Map<String, int> ids) async {
-    logger.i("filling up missing amount");
     for (var key in ids.keys) {
       final body = <String, dynamic>{"current_amount": ids[key]};
-      await pb.collection('products').update(key, body: body);
+      await pb
+          .collection('products')
+          .update(key, body: body)
+          .catchError((error) {
+        logger.e(error);
+        throw Exception("Unsucesfull fill up");
+      });
     }
   }
 
   Future<JwtLogin> login(String username, password) async {
-    final authData = await pb.collection('users').authWithPassword(
-          username,
-          password,
-        );
-
-    if (authData.token != null) {
-      return JwtLogin(accessToken: authData.token, tokenType: "tmp");
-    } else {
-      logger.e("Unsucesfull login");
+    final authData = await pb
+        .collection('users')
+        .authWithPassword(username, password)
+        .catchError((error) {
+      logger.e(error);
       throw Exception("Unsucesfull login");
-    }
+    });
+
+    return JwtLogin(accessToken: authData.token, tokenType: "tmp");
   }
 
   Future<void> logout() async {

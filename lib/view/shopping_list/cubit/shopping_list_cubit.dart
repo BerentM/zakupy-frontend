@@ -21,7 +21,7 @@ class ShoppingListCubit extends Cubit<ShoppingListState> {
     Map<String, int> ids = {};
     for (var product in shoppingList.shoppingList) {
       if (product.selected) {
-        ids[product.id!] = product.targetAmount;
+        ids[product.id] = product.targetAmount;
       }
     }
 

@@ -31,7 +31,7 @@ class _ShoppingListViewState extends State<ShoppingListView> {
   @override
   Widget build(BuildContext context) {
     shoppingList.sort(
-      (a, b) => a.product!.toLowerCase().compareTo(b.product!.toLowerCase()),
+      (a, b) => a.product.toLowerCase().compareTo(b.product.toLowerCase()),
     );
     shoppingList.sort(
       (a, b) => a.product.compareTo(b.product),
@@ -74,9 +74,9 @@ class _ShoppingListViewState extends State<ShoppingListView> {
                         : Colors.grey,
                   ),
                 ),
-                title: Text(shoppingList[index].product!),
+                title: Text(shoppingList[index].product),
                 trailing: Text(shoppingList[index].missingAmount.toString()),
-                subtitle: Text(shoppingList[index].source!),
+                subtitle: Text(shoppingList[index].source),
               );
             },
           ),
