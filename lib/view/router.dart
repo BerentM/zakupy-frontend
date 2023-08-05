@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart' as m;
+import 'package:zakupy_frontend/data/models/shopping_list.dart' as m;
 import 'package:zakupy_frontend/view/home/home.dart';
 import 'package:zakupy_frontend/view/shopping_list/shopping_list.dart';
 import 'package:zakupy_frontend/view/product_list/product_list.dart';
@@ -28,7 +29,7 @@ class AppRouter {
       case EDIT_SHOPPING:
         return MaterialPageRoute(
           builder: (_) => ProductListEditView(
-            productData: settings.arguments as m.ProductListElement,
+            productData: settings.arguments as m.ShoppingListElement,
             backOffRoute: SHOPPING_LIST,
           ),
         );

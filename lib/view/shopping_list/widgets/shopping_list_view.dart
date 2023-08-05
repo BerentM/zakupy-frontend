@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:zakupy_frontend/constants/strings.dart';
-import 'package:zakupy_frontend/data/models/product_list.dart';
+import 'package:zakupy_frontend/data/models/shopping_list.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:zakupy_frontend/view/common/misc.dart';
 
 class ShoppingListView extends StatefulWidget {
-  final ProductList currentData;
+  final ShoppingList currentData;
   const ShoppingListView({
     Key? key,
     required this.currentData,
@@ -16,15 +16,15 @@ class ShoppingListView extends StatefulWidget {
 }
 
 class _ShoppingListViewState extends State<ShoppingListView> {
-  late List<ProductListElement> shoppingList = widget.currentData.productList;
+  late List<ShoppingListElement> shoppingList = widget.currentData.shoppingList;
   int lastPos = 1;
 
   void _runFilter(String searchedString) {
     setState(() {
-      shoppingList = filterProductList(
+      shoppingList = filterList(
         searchedString,
-        widget.currentData.productList,
-      );
+        widget.currentData.shoppingList,
+      ).cast<ShoppingListElement>();
     });
   }
 
@@ -34,7 +34,7 @@ class _ShoppingListViewState extends State<ShoppingListView> {
       (a, b) => a.product!.toLowerCase().compareTo(b.product!.toLowerCase()),
     );
     shoppingList.sort(
-      (a, b) => a.position.compareTo(b.position),
+      (a, b) => a.product.compareTo(b.product),
     );
     return Column(
       children: [

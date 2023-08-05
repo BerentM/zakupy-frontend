@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zakupy_frontend/utils/logs.dart';
 import 'package:zakupy_frontend/data/api_service.dart';
-import 'package:zakupy_frontend/data/models/product_list.dart';
+import 'package:zakupy_frontend/data/models/shopping_list.dart';
 
 part 'shopping_list_state.dart';
 
@@ -16,12 +16,12 @@ class ShoppingListCubit extends Cubit<ShoppingListState> {
     emit(ShoppingListLoaded(l));
   }
 
-  Future<void> fillUp(ProductList products) async {
+  Future<void> fillUp(ShoppingList shoppingList) async {
     logger.d("fill up missing products", component);
-    List<int> ids = [];
-    for (var product in products.productList) {
+    Map<String, int> ids = {};
+    for (var product in shoppingList.shoppingList) {
       if (product.selected) {
-        ids.add(product.id!);
+        ids[product.id!] = product.targetAmount;
       }
     }
 

@@ -1,7 +1,6 @@
 import 'package:zakupy_frontend/data/models/product_list.dart';
 
-List<ProductListElement> filterProductList(
-    String searchedString, List<ProductListElement> inputList) {
+List<dynamic> filterList(String searchedString, List<dynamic> inputList) {
   if (searchedString.isEmpty) {
     return inputList;
   } else {
@@ -13,6 +12,6 @@ List<ProductListElement> filterProductList(
         .where((value) =>
             value.source!.toLowerCase().contains(searchedString.toLowerCase()))
         .toList();
-    return <ProductListElement>{...productOutput, ...sourceOutput}.toList();
+    return <dynamic>{...productOutput, ...sourceOutput}.toList();
   }
 }

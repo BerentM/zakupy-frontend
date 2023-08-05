@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/models/auth.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
+import 'package:zakupy_frontend/data/models/shopping_list.dart';
 import 'package:zakupy_frontend/utils/logs.dart';
 import 'package:zakupy_frontend/utils/storage.dart';
 import 'package:pocketbase/pocketbase.dart';
@@ -26,21 +27,9 @@ class ApiService {
     return headers;
   }
 
-  Future<ProductList> fetchShoppingList() async {
-    final request = http.Request(
-      'GET',
-      Uri.parse('$url/shoppingList/all?missing_percent=0.1'),
-    );
-    request.headers.addAll(await getHeaders());
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      return productListFromJson(await response.stream.bytesToString());
-    } else {
-      logger.i("empty shoppingList/all response", component);
-      return productListFromJson("");
-    }
+  Future<ShoppingList> fetchShoppingList() async {
+    final records = await pb.collection('shopping_list').getFullList();
+    return ShoppingList.fromRecords(records);
   }
 
   Future<ProductList> fetchProductList() async {
@@ -60,22 +49,11 @@ class ApiService {
     }
   }
 
-  Future<void> fillUp(List<int> ids) async {
-    var request = http.Request(
-      'PATCH',
-      Uri.parse('$url/shoppingList/fill_up'),
-    );
-    request.headers.addAll(await getHeaders());
-    logger.i("ids inside fillUp: $ids", component);
-    request.body = json.encode(ids);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      logger.i(await response.stream.bytesToString(), component);
-    } else {
-      logger.e(
-          "$request\n${request.body}\n${response.reasonPhrase}", component);
+  Future<void> fillUp(Map<String, int> ids) async {
+    logger.i("filling up missing amount");
+    for (var key in ids.keys) {
+      final body = <String, dynamic>{"current_amount": ids[key]};
+      await pb.collection('products').update(key, body: body);
     }
   }
 
@@ -130,22 +108,24 @@ class ApiService {
   }
 
   Future<ProductListElement> updateProduct(
-    int id,
+    String id,
     ProductListElement data,
   ) async {
-    var request =
-        http.Request('PATCH', Uri.parse('$url/productList/update_item?id=$id'));
-    request.body = productListElementToJson(data);
-    request.headers.addAll(await getHeaders());
+    // TODO:
+    return productListElementFromJson("{}");
+    // var request =
+    //     http.Request('PATCH', Uri.parse('$url/productList/update_item?id=$id'));
+    // request.body = productListElementToJson(data);
+    // request.headers.addAll(await getHeaders());
 
-    http.StreamedResponse response = await request.send();
+    // http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
-      return productListElementFromJson(await response.stream.bytesToString());
-    } else {
-      logger.e(response.reasonPhrase, component);
-      throw Exception(response.reasonPhrase);
-    }
+    // if (response.statusCode == 200) {
+    //   return productListElementFromJson(await response.stream.bytesToString());
+    // } else {
+    //   logger.e(response.reasonPhrase, component);
+    //   throw Exception(response.reasonPhrase);
+    // }
   }
 
   void deleteProduct(int id) async {

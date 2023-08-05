@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:pocketbase/pocketbase.dart';
+
 ProductList productListFromJson(String str) =>
     ProductList.fromJson(json.decode(str));
 
@@ -47,7 +49,7 @@ class ProductListElement {
     this.missingAmount,
   });
 
-  int? id;
+  String? id;
   String? product;
   String? source;
   String? category;
