@@ -8,6 +8,5 @@ const EDIT_SHOPPING = "/edit_shopping_list";
 const HOME = "/";
 const LOGIN = "/login";
 
-// const LOCAL_API_URL = "http://10.0.2.2:8000";
 const LOCAL_API_URL = "http://10.0.2.2:8001";
 const REMOTE_API_URL = "https://zakupy.berentm.xyz";

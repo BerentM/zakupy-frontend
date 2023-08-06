@@ -1,21 +1,4 @@
-// To parse this JSON data, do
-//
-//     final productList = productListFromJson(jsonString);
-
-import 'dart:convert';
-
 import 'package:pocketbase/pocketbase.dart';
-
-ProductList productListFromJson(String str) =>
-    ProductList.fromJson(json.decode(str));
-
-ProductListElement productListElementFromJson(String str) =>
-    ProductListElement.fromJson(json.decode(str));
-
-String productListToJson(ProductList data) => json.encode(data.toJson());
-
-String productListElementToJson(ProductListElement data) =>
-    json.encode(data.toJson());
 
 class ProductList {
   ProductList({
@@ -26,16 +9,11 @@ class ProductList {
   List<ProductListElement> productList;
   int count;
 
-  factory ProductList.fromJson(Map<String, dynamic> json) => ProductList(
+  factory ProductList.fromRecords(List<RecordModel> records) => ProductList(
         productList: List<ProductListElement>.from(
-            json["product_list"].map((x) => ProductListElement.fromJson(x))),
-        count: json["count"],
+            records.map((e) => ProductListElement.fromRecord(e))),
+        count: records.length,
       );
-
-  Map<String, dynamic> toJson() => {
-        "product_list": List<dynamic>.from(productList.map((x) => x.toJson())),
-        "count": count,
-      };
 }
 
 class ProductListElement {
@@ -59,17 +37,6 @@ class ProductListElement {
   bool selected = false;
   int position = 1;
 
-  factory ProductListElement.fromJson(Map<String, dynamic> json) =>
-      ProductListElement(
-        id: json["id"],
-        product: json["product"],
-        source: json["source"],
-        category: json["category"],
-        targetAmount: json["target_amount"],
-        currentAmount: json["current_amount"],
-        missingAmount: json["missing_amount"],
-      );
-
   Map<String, dynamic> toJson() {
     final map = {
       "product": product,
@@ -80,5 +47,36 @@ class ProductListElement {
     };
     map.removeWhere((key, value) => value == null);
     return map;
+  }
+
+  Map<String, dynamic> toRequestBody(String? shopId, String? categoryId) {
+    final map = {
+      "name": product,
+      "shop_id": shopId,
+      "category_id": categoryId,
+      "target_amount": targetAmount,
+      "current_amount": currentAmount,
+    };
+    map.removeWhere((key, value) => value == null);
+    return map;
+  }
+
+  factory ProductListElement.fromRecord(RecordModel record) {
+    // TODO: refactor it to more elegant solution
+    var rawData = record.toJson();
+    var expand = rawData["expand"] as Map<String, dynamic>;
+    String? shop =
+        expand.containsKey("shop_id") ? expand["shop_id"]["name"] : "";
+    String? category =
+        expand.containsKey("category_id") ? expand["category_id"]["name"] : "";
+    return ProductListElement(
+      id: record.id,
+      product: record.getStringValue("name"),
+      source: shop,
+      category: category,
+      currentAmount: record.getIntValue("current_amount"),
+      targetAmount: record.getIntValue("target_amount"),
+      missingAmount: record.getIntValue("missing_amount"),
+    );
   }
 }
