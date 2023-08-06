@@ -12,4 +12,4 @@ App was build with Android in mind. In future it will support desktop + web app 
 - cd into local copy of pulled repo
 - run `flutter build apk --split-per-abi`
 - run `flutter install` with phone connected via USB
-
+- in case of problems with `flutter install` run adb command `adb install .\build\app\outputs\flutter-apk\app-armeabi-v7a-release.apk`

@@ -79,18 +79,18 @@ class ApiService {
           .update(key, body: body)
           .catchError((error) {
         logger.e(error, component);
-        throw Exception("Unsucesfull fill up");
+        throw Exception("Unsuccessful fill up");
       });
     }
   }
 
-  Future<JwtLogin> login(String username, password) async {
+  Future<JwtLogin> login(String username, String password) async {
     final authData = await pb
         .collection('users')
         .authWithPassword(username, password)
         .catchError((error) {
       logger.e(error, component);
-      throw Exception("Unsucesfull login");
+      throw Exception("Unsuccessful login");
     });
 
     return JwtLogin(accessToken: authData.token, tokenType: "tmp");
