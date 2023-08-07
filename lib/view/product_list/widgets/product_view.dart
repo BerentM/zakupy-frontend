@@ -23,10 +23,10 @@ class _ProductListViewState extends State<ProductListView> {
 
   void _runFilter(String searchedString) {
     setState(() {
-      productList = filterProductList(
+      productList = filterList(
         searchedString,
         widget.currentData.productList,
-      );
+      ).cast<ProductListElement>();
     });
   }
 

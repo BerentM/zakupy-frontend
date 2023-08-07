@@ -1,17 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:zakupy_frontend/constants/strings.dart';
 import 'package:zakupy_frontend/data/models/auth.dart';
 import 'package:zakupy_frontend/data/models/product_list.dart';
+import 'package:zakupy_frontend/data/models/shopping_list.dart';
 import 'package:zakupy_frontend/utils/logs.dart';
 import 'package:zakupy_frontend/utils/storage.dart';
+import 'package:pocketbase/pocketbase.dart';
 
 class ApiService {
   final component = "ApiService";
-  final url = kDebugMode ? LOCAL_API_URL : REMOTE_API_URL;
+  final pb = PocketBase(kDebugMode ? LOCAL_API_URL : REMOTE_API_URL);
 
   Future<Map<String, String>> getHeaders() async {
     var headers = {
@@ -23,147 +22,127 @@ class ApiService {
     return headers;
   }
 
-  Future<ProductList> fetchShoppingList() async {
-    final request = http.Request(
-      'GET',
-      Uri.parse('$url/shoppingList/all?missing_percent=0.1'),
-    );
-    request.headers.addAll(await getHeaders());
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      return productListFromJson(await response.stream.bytesToString());
-    } else {
-      logger.i("empty shoppingList/all response", component);
-      return productListFromJson("");
+  Future<RecordModel> fetchCategory(String? categoryName) async {
+    if (categoryName == "" || categoryName == null) {
+      return RecordModel();
     }
+    return await pb
+        .collection('categories')
+        .getFirstListItem('name="$categoryName"')
+        .catchError((error) {
+      logger.e(error, component);
+      throw Exception("Couldn't fetch category.");
+    });
+  }
+
+  Future<RecordModel> fetchShop(String? shopName) async {
+    if (shopName == "" || shopName == null) {
+      return RecordModel();
+    }
+    return await pb
+        .collection('shops')
+        .getFirstListItem('name="$shopName"')
+        .catchError((error) {
+      logger.e(error, component);
+      throw Exception("Couldn't fetch shop.");
+    });
+  }
+
+  Future<ShoppingList> fetchShoppingList() async {
+    // TODO: add pagination
+    final records =
+        await pb.collection('shopping_list').getFullList().catchError((error) {
+      logger.e(error, component);
+      throw Exception("Couldn't fetch shopping list.");
+    });
+    return ShoppingList.fromRecords(records);
   }
 
   Future<ProductList> fetchProductList() async {
-    final request = http.Request(
-      'GET',
-      Uri.parse('$url/productList/all'),
-    );
-    request.headers.addAll(await getHeaders());
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      return productListFromJson(await response.stream.bytesToString());
-    } else {
-      logger.i("empty productList/all response", component);
-      return productListFromJson("");
-    }
+    // TODO: add pagination
+    final records = await pb
+        .collection('products')
+        .getFullList(expand: 'shop_id,category_id')
+        .catchError((error) {
+      logger.e(error, component);
+      throw Exception("Couldn't fetch product list.");
+    });
+    var data = ProductList.fromRecords(records);
+    return data;
   }
 
-  Future<void> fillUp(List<int> ids) async {
-    var request = http.Request(
-      'PATCH',
-      Uri.parse('$url/shoppingList/fill_up'),
-    );
-    request.headers.addAll(await getHeaders());
-    logger.i("ids inside fillUp: $ids", component);
-    request.body = json.encode(ids);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      logger.i(await response.stream.bytesToString(), component);
-    } else {
-      logger.e(
-          "$request\n${request.body}\n${response.reasonPhrase}", component);
+  Future<void> fillUp(Map<String, int> ids) async {
+    for (var key in ids.keys) {
+      final body = <String, dynamic>{"current_amount": ids[key]};
+      await pb
+          .collection('products')
+          .update(key, body: body)
+          .catchError((error) {
+        logger.e(error, component);
+        throw Exception("Unsucesfull fill up");
+      });
     }
   }
 
   Future<JwtLogin> login(String username, password) async {
-    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var request = http.Request(
-      'POST',
-      Uri.parse('$url/auth/jwt/login'),
-    );
-    request.bodyFields = {'username': username, 'password': password};
-    request.headers.addAll(headers);
+    final authData = await pb
+        .collection('users')
+        .authWithPassword(username, password)
+        .catchError((error) {
+      logger.e(error, component);
+      throw Exception("Unsucesfull login");
+    });
 
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      return jwtLoginFromJson(await response.stream.bytesToString());
-    } else {
-      logger.e(response.reasonPhrase, component);
-      throw Exception(response.reasonPhrase);
-    }
+    return JwtLogin(accessToken: authData.token, tokenType: "tmp");
   }
 
   Future<void> logout() async {
-    final request = http.Request(
-      'POST',
-      Uri.parse('$url/auth/jwt/logout'),
-    );
-    request.headers.addAll(await getHeaders());
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      logger.d(await response.stream.bytesToString(), component);
-    } else {
-      logger.e(response.reasonPhrase, component);
-      throw Exception(response.reasonPhrase);
-    }
+    pb.authStore.clear();
   }
 
   Future<ProductListElement> addProduct(ProductListElement data) async {
-    var request = http.Request(
-      'POST',
-      Uri.parse('$url/productList/create_item'),
+    var newCategory = await fetchCategory(data.category);
+    var newSource = await fetchShop(data.source);
+    var body = data.toRequestBody(
+      newSource.id == "" ? null : newSource.id,
+      newCategory.id == "" ? null : newCategory.id,
     );
-    request.body = productListElementToJson(data);
-    request.headers.addAll(await getHeaders());
 
-    logger.d(request.body, component);
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      return productListElementFromJson(await response.stream.bytesToString());
-    } else {
-      logger.e(response.reasonPhrase, component);
-      throw Exception(response.reasonPhrase);
-    }
+    final _ =
+        await pb.collection('products').create(body: body).catchError((error) {
+      logger.e(error);
+      throw Exception("Couldn't add new product.");
+    });
+    return data;
   }
 
   Future<ProductListElement> updateProduct(
-    int id,
+    String id,
     ProductListElement data,
   ) async {
-    var request =
-        http.Request('PATCH', Uri.parse('$url/productList/update_item?id=$id'));
-    request.body = productListElementToJson(data);
-    request.headers.addAll(await getHeaders());
+    var newCategory = await fetchCategory(data.category);
+    var newSource = await fetchShop(data.source);
+    var body = data.toRequestBody(
+      newSource.id == "" ? null : newSource.id,
+      newCategory.id == "" ? null : newCategory.id,
+    );
 
-    http.StreamedResponse response = await request.send();
+    final _ = await pb
+        .collection('products')
+        .update(id, body: body)
+        .catchError((error) {
+      logger.e(error);
+      throw Exception("Couldn't update product.");
+    });
 
-    if (response.statusCode == 200) {
-      return productListElementFromJson(await response.stream.bytesToString());
-    } else {
-      logger.e(response.reasonPhrase, component);
-      throw Exception(response.reasonPhrase);
-    }
+    return data;
   }
 
-  void deleteProduct(int id) async {
-    var request = http.Request(
-      'DELETE',
-      Uri.parse('$url/productList/delete_item?id=$id'),
-    );
-    request.headers.addAll(await getHeaders());
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      logger.d("Product with id=$id deleted.", component);
-    } else {
-      logger.e(response.reasonPhrase, component);
-      throw Exception(response.reasonPhrase);
-    }
+  void deleteProduct(String id) async {
+    await pb.collection('products').delete(id).catchError((error) {
+      logger.e(error, component);
+      throw Exception("Couldn't delete product.");
+    });
+    logger.d("Product with id=$id deleted.", component);
   }
 }

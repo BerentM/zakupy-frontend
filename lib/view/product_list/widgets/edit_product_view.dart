@@ -11,7 +11,7 @@ class ProductListEditView extends StatefulWidget {
     required this.productData,
     required this.backOffRoute,
   }) : super(key: key);
-  final ProductListElement productData;
+  final dynamic productData;
   final String backOffRoute;
 
   @override
@@ -119,7 +119,7 @@ class _SaveButton extends StatelessWidget {
   }) : super(key: key);
 
   final String backOffRoute;
-  final int id;
+  final String id;
   final TextEditingController categoryController,
       productController,
       shopController,
