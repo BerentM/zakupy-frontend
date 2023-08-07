@@ -75,7 +75,10 @@ class _ProductListEditViewState extends State<ProductListEditView> {
                     );
                   }),
             ),
-            DropdownPopup(popupName: AppLocalizations.of(context)!.shop),
+            DropdownPopup(
+              popupName: AppLocalizations.of(context)!.shop,
+              collection: "shops",
+            ),
           ]),
           Row(children: [
             Expanded(
@@ -88,12 +91,15 @@ class _ProductListEditViewState extends State<ProductListEditView> {
                     }
                     return DropdownField(
                       textController: categoryController,
-                      label: AppLocalizations.of(context)!.shop,
+                      label: AppLocalizations.of(context)!.category,
                       options: snapshot.data,
                     );
                   }),
             ),
-            DropdownPopup(popupName: AppLocalizations.of(context)!.category),
+            DropdownPopup(
+              popupName: AppLocalizations.of(context)!.category,
+              collection: "categories",
+            ),
           ]),
           Row(children: [
             NumberInput(

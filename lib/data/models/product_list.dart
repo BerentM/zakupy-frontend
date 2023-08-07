@@ -57,7 +57,6 @@ class ProductListElement {
       "target_amount": targetAmount,
       "current_amount": currentAmount,
     };
-    map.removeWhere((key, value) => value == null);
     return map;
   }
 

@@ -159,4 +159,12 @@ class ApiService {
     final records = await pb.collection(collection).getFullList();
     return records.map((e) => e.getStringValue("name")).toList();
   }
+
+  Future<void> addNameToCollection(String collection, String name) async {
+    final body = <String, dynamic>{"name": name};
+    await pb.collection(collection).create(body: body).catchError((error) {
+      logger.e(error, component);
+      throw Exception("Couldn't create new record in $collection.");
+    });
+  }
 }

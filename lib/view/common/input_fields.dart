@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zakupy_frontend/data/api_service.dart';
 
 class NumberInput extends StatelessWidget {
   const NumberInput({
@@ -17,7 +18,7 @@ class NumberInput extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ConstrainedBox(
-        constraints: BoxConstraints.tight(const Size(100, 100)),
+        constraints: BoxConstraints.tight(const Size(80, 100)),
         child: TextFormField(
           controller: textController,
           maxLength: 5,
@@ -89,6 +90,7 @@ class DropdownField extends StatefulWidget {
 class _DropdownFieldState extends State<DropdownField> {
   @override
   Widget build(BuildContext context) {
+    widget.options.add("");
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InputDecorator(
@@ -120,8 +122,11 @@ class _DropdownFieldState extends State<DropdownField> {
 }
 
 class DropdownPopup extends StatelessWidget {
-  const DropdownPopup({Key? key, required this.popupName}) : super(key: key);
+  DropdownPopup({Key? key, required this.popupName, required this.collection})
+      : super(key: key);
   final String popupName;
+  final String collection;
+  final TextEditingController textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +140,7 @@ class DropdownPopup extends StatelessWidget {
             return AlertDialog(
               content: Form(
                 child: TextFormField(
+                  controller: textController,
                   decoration: InputDecoration(
                     labelText: popupName,
                     icon: const Icon(Icons.category),
@@ -145,7 +151,11 @@ class DropdownPopup extends StatelessWidget {
                 ElevatedButton(
                     child: Text(AppLocalizations.of(context)!.save),
                     onPressed: () {
-                      // TODO: API cal
+                      ApiService().addNameToCollection(
+                        collection,
+                        textController.text,
+                      );
+                      Navigator.of(context).pop();
                     })
               ],
             );
