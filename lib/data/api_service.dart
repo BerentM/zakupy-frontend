@@ -9,8 +9,17 @@ import 'package:zakupy_frontend/utils/storage.dart';
 import 'package:pocketbase/pocketbase.dart';
 
 class ApiService {
+  // singleton pattern
+  // every instance of the ApiService will be the same isntance
+  static ApiService? _instance;
+  factory ApiService() {
+    _instance ??= ApiService._();
+    return _instance!;
+  }
+  ApiService._();
+
   final component = "ApiService";
-  final pb = PocketBase(kDebugMode ? LOCAL_API_URL : REMOTE_API_URL);
+  var pb = PocketBase(kDebugMode ? LOCAL_API_URL : REMOTE_API_URL);
 
   Future<Map<String, String>> getHeaders() async {
     var headers = {
