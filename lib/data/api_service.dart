@@ -9,8 +9,17 @@ import 'package:zakupy_frontend/utils/storage.dart';
 import 'package:pocketbase/pocketbase.dart';
 
 class ApiService {
+  // singleton pattern
+  // every instance of the ApiService will be the same isntance
+  static ApiService? _instance;
+  factory ApiService() {
+    _instance ??= ApiService._();
+    return _instance!;
+  }
+  ApiService._();
+
   final component = "ApiService";
-  final pb = PocketBase(kDebugMode ? LOCAL_API_URL : REMOTE_API_URL);
+  var pb = PocketBase(kDebugMode ? LOCAL_API_URL : REMOTE_API_URL);
 
   Future<Map<String, String>> getHeaders() async {
     var headers = {
@@ -144,5 +153,18 @@ class ApiService {
       throw Exception("Couldn't delete product.");
     });
     logger.d("Product with id=$id deleted.", component);
+  }
+
+  Future<List<String>> fetchCollectionNames(String collection) async {
+    final records = await pb.collection(collection).getFullList();
+    return records.map((e) => e.getStringValue("name")).toList();
+  }
+
+  Future<void> addNameToCollection(String collection, String name) async {
+    final body = <String, dynamic>{"name": name};
+    await pb.collection(collection).create(body: body).catchError((error) {
+      logger.e(error, component);
+      throw Exception("Couldn't create new record in $collection.");
+    });
   }
 }

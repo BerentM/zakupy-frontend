@@ -59,14 +59,48 @@ class _ProductListEditViewState extends State<ProductListEditView> {
             textController: productController,
             label: AppLocalizations.of(context)!.product,
           ),
-          TextInput(
-            textController: sourceController,
-            label: AppLocalizations.of(context)!.shop,
-          ),
-          TextInput(
-            textController: categoryController,
-            label: AppLocalizations.of(context)!.category,
-          ),
+          Row(children: [
+            Expanded(
+              child: FutureBuilder(
+                  future: ApiService().fetchCollectionNames("shops"),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show a loading indicator
+                      return const CircularProgressIndicator();
+                    }
+                    return DropdownField(
+                      textController: sourceController,
+                      label: AppLocalizations.of(context)!.shop,
+                      options: snapshot.data,
+                    );
+                  }),
+            ),
+            DropdownPopup(
+              popupName: AppLocalizations.of(context)!.shop,
+              collection: "shops",
+            ),
+          ]),
+          Row(children: [
+            Expanded(
+              child: FutureBuilder(
+                  future: ApiService().fetchCollectionNames("categories"),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show a loading indicator
+                      return const CircularProgressIndicator();
+                    }
+                    return DropdownField(
+                      textController: categoryController,
+                      label: AppLocalizations.of(context)!.category,
+                      options: snapshot.data,
+                    );
+                  }),
+            ),
+            DropdownPopup(
+              popupName: AppLocalizations.of(context)!.category,
+              collection: "categories",
+            ),
+          ]),
           Row(children: [
             NumberInput(
               textController: currentAmountController,
