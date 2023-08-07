@@ -154,4 +154,9 @@ class ApiService {
     });
     logger.d("Product with id=$id deleted.", component);
   }
+
+  Future<List<String>> fetchCollectionNames(String collection) async {
+    final records = await pb.collection(collection).getFullList();
+    return records.map((e) => e.getStringValue("name")).toList();
+  }
 }

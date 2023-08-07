@@ -71,17 +71,16 @@ class _TextInputState extends State<TextInput> {
   }
 }
 
-// TODO: tmp list, api calls should be used in stead of const list
-const List<String> list = ['One', 'Two', 'Three', 'Four'];
-
 class DropdownField extends StatefulWidget {
   const DropdownField({
     super.key,
     required this.textController,
     required this.label,
+    required this.options,
   });
   final TextEditingController textController;
   final String label;
+  final List<String> options;
 
   @override
   State<DropdownField> createState() => _DropdownFieldState();
@@ -107,7 +106,7 @@ class _DropdownFieldState extends State<DropdownField> {
                 widget.textController.text = value!;
               });
             },
-            items: list.map<DropdownMenuItem<String>>((String value) {
+            items: widget.options.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),

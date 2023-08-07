@@ -34,19 +34,37 @@ class _ProductListAddViewState extends State<ProductListAddView> {
           ),
           Row(children: [
             Expanded(
-              child: DropdownField(
-                textController: shopController,
-                label: AppLocalizations.of(context)!.shop,
-              ),
+              child: FutureBuilder(
+                  future: ApiService().fetchCollectionNames("shops"),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show a loading indicator
+                      return const CircularProgressIndicator();
+                    }
+                    return DropdownField(
+                      textController: shopController,
+                      label: AppLocalizations.of(context)!.shop,
+                      options: snapshot.data,
+                    );
+                  }),
             ),
             DropdownPopup(popupName: AppLocalizations.of(context)!.shop),
           ]),
           Row(children: [
             Expanded(
-              child: DropdownField(
-                textController: categoryController,
-                label: AppLocalizations.of(context)!.category,
-              ),
+              child: FutureBuilder(
+                  future: ApiService().fetchCollectionNames("categories"),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show a loading indicator
+                      return const CircularProgressIndicator();
+                    }
+                    return DropdownField(
+                      textController: categoryController,
+                      label: AppLocalizations.of(context)!.shop,
+                      options: snapshot.data,
+                    );
+                  }),
             ),
             DropdownPopup(popupName: AppLocalizations.of(context)!.category),
           ]),

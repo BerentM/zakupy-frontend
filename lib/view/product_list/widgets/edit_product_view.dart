@@ -61,19 +61,37 @@ class _ProductListEditViewState extends State<ProductListEditView> {
           ),
           Row(children: [
             Expanded(
-              child: DropdownField(
-                textController: sourceController,
-                label: AppLocalizations.of(context)!.shop,
-              ),
+              child: FutureBuilder(
+                  future: ApiService().fetchCollectionNames("shops"),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show a loading indicator
+                      return const CircularProgressIndicator();
+                    }
+                    return DropdownField(
+                      textController: sourceController,
+                      label: AppLocalizations.of(context)!.shop,
+                      options: snapshot.data,
+                    );
+                  }),
             ),
             DropdownPopup(popupName: AppLocalizations.of(context)!.shop),
           ]),
           Row(children: [
             Expanded(
-              child: DropdownField(
-                textController: categoryController,
-                label: AppLocalizations.of(context)!.category,
-              ),
+              child: FutureBuilder(
+                  future: ApiService().fetchCollectionNames("categories"),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show a loading indicator
+                      return const CircularProgressIndicator();
+                    }
+                    return DropdownField(
+                      textController: categoryController,
+                      label: AppLocalizations.of(context)!.shop,
+                      options: snapshot.data,
+                    );
+                  }),
             ),
             DropdownPopup(popupName: AppLocalizations.of(context)!.category),
           ]),
